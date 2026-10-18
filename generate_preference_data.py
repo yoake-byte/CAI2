@@ -48,7 +48,7 @@ VALID_CLASSES = {"ambiguous", "clear"}
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
-import tqdm
+from tqdm import tqdm
 def synthesize_pairs(n: int) -> list[dict]:
     model_name = "meta-llama/Llama-3.1-8B-Instruct"
     print("Loading tokenizer and model...")
