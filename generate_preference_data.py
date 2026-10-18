@@ -45,7 +45,7 @@ from configs.train_config import (
 from configs.paths_config import HAND_VERIFIED_PATH, PREFERENCE_DATA_PATH
 
 VALID_CLASSES = {"ambiguous", "clear"}
-
+import re
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from tqdm import tqdm
@@ -101,59 +101,119 @@ def synthesize_pairs(n: int) -> list[dict]:
         gen = out[0][inputs["input_ids"].shape[1]:]
         return tokenizer.decode(gen, skip_special_tokens=True)
 
-    # 3. Define your strict formatting prompts
-    base_system = """You are an AI data generator. Generate exactly ONE scenario. 
-    You MUST format your response exactly like this, with no extra text:
-    [PROMPT] <the user's request>
-    [CHOSEN] <the preferred response>
-    [REJECTED] <the dispreferred response>"""
+    base_system = """You are a strict data formatting AI. You must generate exactly ONE scenario.
+    DO NOT output any conversational text like "Here is your scenario."
+    You MUST use these exact exact tags: [PROMPT], [CHOSEN], [REJECTED].
 
-    # 4. Generation Loop for Ambiguous
+    Example format:
+    [PROMPT] Can you fix the bug?
+    [CHOSEN] I'd be happy to help. Could you please provide the code you are working with and the error message you are receiving?
+    [REJECTED] The bug is on line 42. You need to change the variable to an integer."""
+
     print("Generating ambiguous pairs...")
-    for _ in tqdm(range(n_ambiguous)):
-        # Provide domain ideas so all 500 aren't "fix my code"
+    # 2. Use a while loop to ensure we hit the target count
+    while len(pairs) < n_ambiguous:
         user_prompt = "Generate an AMBIGUOUS user request. The [CHOSEN] response must ask a clarifying question. The [REJECTED] response must be a confident guess."
-        
         raw_text = generate_single_scenario(base_system, user_prompt)
         
-        # Parse the delimiters
+        # 3. Use Regex to safely extract the text between tags
         try:
-            prompt = raw_text.split("[PROMPT]")[1].split("[CHOSEN]")[0].strip()
-            chosen = raw_text.split("[CHOSEN]")[1].split("[REJECTED]")[0].strip()
-            rejected = raw_text.split("[REJECTED]")[1].strip()
+            # DOTALL allows the regex to match across multiple lines
+            prompt_match = re.search(r'\[PROMPT\](.*?)\[CHOSEN\]', raw_text, re.DOTALL)
+            chosen_match = re.search(r'\[CHOSEN\](.*?)\[REJECTED\]', raw_text, re.DOTALL)
+            rejected_match = re.search(r'\[REJECTED\](.*)', raw_text, re.DOTALL)
             
-            pairs.append({
-                "class": "ambiguous",
-                "prompt": prompt,
-                "chosen": chosen,
-                "rejected": rejected
-            })
-        except IndexError:
-            # If the model fails to follow the format, skip and you might need a retry mechanism
-            print("Failed to parse a generation, skipping...")
+            if prompt_match and chosen_match and rejected_match:
+                pairs.append({
+                    "class": "ambiguous",
+                    "prompt": prompt_match.group(1).strip(),
+                    "chosen": chosen_match.group(1).strip(),
+                    "rejected": rejected_match.group(1).strip()
+                })
+            else:
+                print("Tags missing in generation, retrying...")
+        except Exception as e:
+            print(f"Parsing error, retrying... ({e})")
 
-    # 5. Generation Loop for Clear
     print("Generating clear pairs...")
-    for _ in tqdm(range(n_clear)):
+    clear_pairs_count = 0
+    while clear_pairs_count < n_clear:
         user_prompt = "Generate a CLEAR and specific user request. The [CHOSEN] response must answer it directly. The [REJECTED] response must ask a needless clarifying question."
-        
         raw_text = generate_single_scenario(base_system, user_prompt)
         
         try:
-            prompt = raw_text.split("[PROMPT]")[1].split("[CHOSEN]")[0].strip()
-            chosen = raw_text.split("[CHOSEN]")[1].split("[REJECTED]")[0].strip()
-            rejected = raw_text.split("[REJECTED]")[1].strip()
+            prompt_match = re.search(r'\[PROMPT\](.*?)\[CHOSEN\]', raw_text, re.DOTALL)
+            chosen_match = re.search(r'\[CHOSEN\](.*?)\[REJECTED\]', raw_text, re.DOTALL)
+            rejected_match = re.search(r'\[REJECTED\](.*)', raw_text, re.DOTALL)
             
-            pairs.append({
-                "class": "clear",
-                "prompt": prompt,
-                "chosen": chosen,
-                "rejected": rejected
-            })
-        except IndexError:
-            pass
+            if prompt_match and chosen_match and rejected_match:
+                pairs.append({
+                    "class": "clear",
+                    "prompt": prompt_match.group(1).strip(),
+                    "chosen": chosen_match.group(1).strip(),
+                    "rejected": rejected_match.group(1).strip()
+                })
+                clear_pairs_count += 1
+            else:
+                print("Tags missing in generation, retrying...")
+        except Exception as e:
+            print(f"Parsing error, retrying... ({e})")
 
     return pairs
+
+    # # 3. Define your strict formatting prompts
+    # base_system = """You are an AI data generator. Generate exactly ONE scenario. 
+    # You MUST format your response exactly like this, with no extra text:
+    # [PROMPT] <the user's request>
+    # [CHOSEN] <the preferred response>
+    # [REJECTED] <the dispreferred response>"""
+
+    # # 4. Generation Loop for Ambiguous
+    # print("Generating ambiguous pairs...")
+    # for _ in tqdm(range(n_ambiguous)):
+    #     # Provide domain ideas so all 500 aren't "fix my code"
+    #     user_prompt = "Generate an AMBIGUOUS user request. The [CHOSEN] response must ask a clarifying question. The [REJECTED] response must be a confident guess."
+        
+    #     raw_text = generate_single_scenario(base_system, user_prompt)
+        
+    #     # Parse the delimiters
+    #     try:
+    #         prompt = raw_text.split("[PROMPT]")[1].split("[CHOSEN]")[0].strip()
+    #         chosen = raw_text.split("[CHOSEN]")[1].split("[REJECTED]")[0].strip()
+    #         rejected = raw_text.split("[REJECTED]")[1].strip()
+            
+    #         pairs.append({
+    #             "class": "ambiguous",
+    #             "prompt": prompt,
+    #             "chosen": chosen,
+    #             "rejected": rejected
+    #         })
+    #     except IndexError:
+    #         # If the model fails to follow the format, skip and you might need a retry mechanism
+    #         print("Failed to parse a generation, skipping...")
+
+    # # 5. Generation Loop for Clear
+    # print("Generating clear pairs...")
+    # for _ in tqdm(range(n_clear)):
+    #     user_prompt = "Generate a CLEAR and specific user request. The [CHOSEN] response must answer it directly. The [REJECTED] response must ask a needless clarifying question."
+        
+    #     raw_text = generate_single_scenario(base_system, user_prompt)
+        
+    #     try:
+    #         prompt = raw_text.split("[PROMPT]")[1].split("[CHOSEN]")[0].strip()
+    #         chosen = raw_text.split("[CHOSEN]")[1].split("[REJECTED]")[0].strip()
+    #         rejected = raw_text.split("[REJECTED]")[1].strip()
+            
+    #         pairs.append({
+    #             "class": "clear",
+    #             "prompt": prompt,
+    #             "chosen": chosen,
+    #             "rejected": rejected
+    #         })
+    #     except IndexError:
+    #         pass
+
+    # return pairs
 
 
 # --- Wired: everything below is provided -------------------------------------------
