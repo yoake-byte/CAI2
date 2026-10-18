@@ -48,6 +48,7 @@ VALID_CLASSES = {"ambiguous", "clear"}
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
+import tqdm
 def synthesize_pairs(n: int) -> list[dict]:
     model_name = "meta-llama/Llama-3.1-8B-Instruct"
     print("Loading tokenizer and model...")
@@ -109,7 +110,7 @@ def synthesize_pairs(n: int) -> list[dict]:
 
     # 4. Generation Loop for Ambiguous
     print("Generating ambiguous pairs...")
-    for _ in range(n_ambiguous):
+    for _ in tqdm(range(n_ambiguous)):
         # Provide domain ideas so all 500 aren't "fix my code"
         user_prompt = "Generate an AMBIGUOUS user request. The [CHOSEN] response must ask a clarifying question. The [REJECTED] response must be a confident guess."
         
@@ -133,7 +134,7 @@ def synthesize_pairs(n: int) -> list[dict]:
 
     # 5. Generation Loop for Clear
     print("Generating clear pairs...")
-    for _ in range(n_clear):
+    for _ in tqdm(range(n_clear)):
         user_prompt = "Generate a CLEAR and specific user request. The [CHOSEN] response must answer it directly. The [REJECTED] response must ask a needless clarifying question."
         
         raw_text = generate_single_scenario(base_system, user_prompt)
