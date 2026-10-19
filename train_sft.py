@@ -97,19 +97,14 @@ def train_loop(model, tokenizer, dataset) -> None:
     # dataset.map applies your function to every item in the dataset efficiently
     # Assuming you import _to_messages from data_loader
     processed_dataset = dataset.map(
-        lambda example: build_sft_example(
-            example["messages"],
-            tokenizer, 
-            SFT_MAX_SEQ_LEN
-        ),
-        remove_columns=dataset.column_names,
-        batched=False
-    )
-    processed_dataset = dataset.map(
-        lambda example: build_sft_example(example, tokenizer, SFT_MAX_SEQ_LEN),
-        remove_columns=dataset.column_names, # Drop raw text so dataloader only gets tensors
-        batched=False 
-    )
+            lambda example: build_sft_example(
+                example["messages"],  # <-- Extract the list from the row dictionary here
+                tokenizer, 
+                SFT_MAX_SEQ_LEN
+            ),
+            remove_columns=dataset.column_names, 
+            batched=False 
+        )
 
     def collate_fn(batch):
         """Pads examples in the batch to the same length."""
