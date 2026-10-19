@@ -204,7 +204,7 @@ def train_loop(policy, tokenizer, dataset, beta: float = DPO_BETA) -> None:
             prompt=prompt,
             chosen_messages=chosen,
             rejected_messages=rejected,
-            max_len=DPO_MAX_SEQ_LEN  # Uncomment if your function takes this argument
+            #max_seq_len=DPO_MAX_SEQ_LEN  # Uncomment if your function takes this argument
         )
         
         # Return the dictionary of tokenized tensors 
