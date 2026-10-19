@@ -93,7 +93,71 @@ def train_loop(model, tokenizer, dataset) -> None:
     Hyperparameters (SFT_BATCH_SIZE, SFT_EPOCHS, SFT_LEARNING_RATE, SFT_MAX_SEQ_LEN) are
     in configs/train_config.py -- yours to tune, not fixed by this skeleton.
     """
-    raise NotImplementedError("Implement the Part A SFT training loop.")
+    print("Preprocessing dataset...")
+    # dataset.map applies your function to every item in the dataset efficiently
+    processed_dataset = dataset.map(
+        lambda example: build_sft_example(example, tokenizer, SFT_MAX_SEQ_LEN),
+        remove_columns=dataset.column_names, # Drop raw text so dataloader only gets tensors
+        batched=False 
+    )
+
+    def collate_fn(batch):
+        """Pads examples in the batch to the same length."""
+        # Extract individual lists/tensors
+        input_ids = [torch.tensor(ex["input_ids"], dtype=torch.long) for ex in batch]
+        attention_mask = [torch.tensor(ex["attention_mask"], dtype=torch.long) for ex in batch]
+        labels = [torch.tensor(ex["labels"], dtype=torch.long) for ex in batch]
+
+        # Pad sequences to the maximum length in this specific batch
+        # pad_token_id is usually used for inputs
+        padded_inputs = torch.nn.utils.rnn.pad_sequence(input_ids, batch_first=True, padding_value=tokenizer.pad_token_id)
+        # Attention mask padding must be 0 so the model ignores the padded space
+        padded_attention = torch.nn.utils.rnn.pad_sequence(attention_mask, batch_first=True, padding_value=0)
+        # Labels padding MUST be -100 because PyTorch CrossEntropyLoss ignores -100
+        padded_labels = torch.nn.utils.rnn.pad_sequence(labels, batch_first=True, padding_value=-100)
+
+        # Move tensors to the same device as the model (e.g., "cuda")
+        return {
+            "input_ids": padded_inputs.to(model.device),
+            "attention_mask": padded_attention.to(model.device),
+            "labels": padded_labels.to(model.device)
+        }
+
+    dataloader = torch.nn.utils.data.DataLoader(
+        processed_dataset, 
+        batch_size=SFT_BATCH_SIZE, 
+        shuffle=True, 
+        collate_fn=collate_fn
+    )
+
+    #train lora
+    trainable_params = [p for p in model.parameters() if p.requires_grad]
+    optimizer = torch.optim.AdamW(trainable_params, lr=SFT_LEARNING_RATE)
+
+    # -------------------------------------------------------------------------
+    # 3. The actual Training Loop
+    # -------------------------------------------------------------------------
+    print("Starting training...")
+    model.train() # Set model to training mode
+
+    for epoch in range(SFT_EPOCHS):
+        for step, batch in enumerate(dataloader):
+            # Clear old gradients
+            optimizer.zero_grad()
+
+            # Forward pass. HuggingFace models automatically calculate loss if 'labels' are provided
+            outputs = model(**batch)
+            loss = outputs.loss
+
+            # Backward pass (compute gradients)
+            loss.backward()
+
+            # Update weights
+            optimizer.step()
+
+            # Log periodically
+            if step % 10 == 0:
+                print(f"Epoch {epoch + 1}/{SFT_EPOCHS} | Step {step} | Loss: {loss.item():.4f}")
 
 
 def main() -> None:

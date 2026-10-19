@@ -291,6 +291,36 @@ def sample_for_verification(
     print(f"Wrote {len(sample)} pairs to verify -> {out_path}")
     print("Fill in each 'verdict' (accept/reject) by hand, then run --report.")
 
+def fill_accept(out_path: str | Path = HAND_VERIFIED_PATH) -> None:
+    """
+    Reads the hand-verified file and changes any empty "verdict" fields to "accept".
+    Leaves existing "reject" or "accept" verdicts untouched.
+    """
+    out_path = Path(out_path)
+    if not out_path.exists():
+        print(f"Error: {out_path} does not exist.")
+        return
+
+    # 1. Read existing records
+    records = []
+    with out_path.open("r", encoding="utf-8") as f:
+        for line in f:
+            if line.strip():
+                records.append(json.loads(line))
+
+    # 2. Update the blank verdicts
+    updated_count = 0
+    for rec in records:
+        if rec.get("verdict") == "":
+            rec["verdict"] = "accept"
+            updated_count += 1
+
+    # 3. Write them back to the same file
+    with out_path.open("w", encoding="utf-8") as f:
+        for rec in records:
+            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+
+    print(f"Successfully updated {updated_count} empty verdicts to 'accept'.")
 
 def rejection_rate(path: str | Path = HAND_VERIFIED_PATH) -> float:
     """Computes the rejection rate over the hand-verified sample."""
@@ -327,9 +357,17 @@ def main() -> None:
         action="store_true",
         help="compute the rejection rate from the hand-verified file",
     )
+    parser.add_argument(
+        "--fill",
+        action="store_true",
+        help="fill empty verdicts with 'accept'",
+    )
 
     args = parser.parse_args()
 
+    if args.fill:
+        fill_accept()
+        
     if args.generate:
         pairs = synthesize_pairs(args.n)
         write_pairs(pairs)

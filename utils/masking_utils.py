@@ -36,5 +36,21 @@ def tokenize_with_response_mask(messages: list[dict], tokenizer, max_seq_len: in
     invites the final assistant turn. Its length tells you exactly where the response
     starts in the full conversation's tokenization -- everything before that index is
     prompt, everything from it onward (up to the end-of-turn token) is response.
-    """
-    raise NotImplementedError("Implement tokenization + response masking.")
+    """ 
+
+    full_tokens = tokenizer.apply_chat_template(messages, tokenize=True)  
+    # Truncate to max_seq_len
+    full_tokens = full_tokens[:max_seq_len]
+    #important: the following line is necessary to convert the list of token ids from python list into a tensor
+    input_ids = torch.tensor(full_tokens, dtype=torch.long)
+
+    prompt_len = len(tokenizer.apply_chat_template(messages[:-1], tokenize=True, add_generation_prompt=True))
+    attention_mask = torch.ones_like(input_ids)
+    response_mask = torch.zeros_like(input_ids)
+    if prompt_len < max_seq_len:
+        response_mask[prompt_len:] = 1
+    return {
+            "input_ids": input_ids,
+            "attention_mask": attention_mask,
+            "response_mask": response_mask
+    }
