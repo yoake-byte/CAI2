@@ -95,7 +95,21 @@ def sequence_log_prob(
     `with model.disable_adapter():` block to get the reference log-probs -- see
     README.md Part B, gotcha #1.
     """
-    raise NotImplementedError("Implement per-sequence response log-prob computation.")
+    outputs = model(input_ids=input_ids, attention_mask=attention_mask)
+    logits = outputs.logits
+
+    predictions = logits[:, :-1, :]  # Shift for next-token prediction
+    target_ids = input_ids[:, 1:]  # Shift for next-token prediction
+    masks = attention_mask[:, 1:] * response_mask[:, 1:]  # Shift for next-token prediction
+
+    log_probs = torch.nn.functional.log_softmax(predictions, dim=-1)
+
+    # Step 4: Gather the log-probs of the actual target tokens
+    selected_log_probs = log_probs.gather(dim=2, index=target_ids.unsqueeze(-1)).squeeze(-1)
+    response_log_probs = selected_log_probs * masks
+    sum_log_probs = response_log_probs.sum(dim=1)
+
+    return sum_log_probs
 
 
 def dpo_loss(
@@ -116,8 +130,42 @@ def dpo_loss(
     This function's signature must not change. The GTA reference tests exercise it
     directly (tests/test_dpo_loss.py).
     """
-    raise NotImplementedError("Implement the DPO loss.")
+    chosen_diff = policy_chosen_logps - reference_chosen_logps
+    rejected_diff = policy_rejected_logps - reference_rejected_logps
+    loss = -torch.nn.functional.logsigmoid(beta * (chosen_diff - rejected_diff))
+    return loss.mean()
 
+
+import torch
+from torch.nn.utils.rnn import pad_sequence
+
+def dpo_collate_fn(batch_list, pad_token_id):
+    # 'batch_list' is a list of dictionaries, where each dictionary is one row.
+    # We need to group them by key instead of by row.
+    
+    batched_dict = {}
+    
+    # Assuming your build_dpo_example outputs these 6 standard keys:
+    keys = [
+        "chosen_input_ids", "chosen_attention_mask", "chosen_response_mask",
+        "rejected_input_ids", "rejected_attention_mask", "rejected_response_mask"
+    ]
+    
+    for key in keys:
+        # Extract the tensor for this specific key from every row in the batch
+        # We also ensure they are actual PyTorch tensors
+        tensors = [torch.tensor(row[key]) for row in batch_list]
+        
+        # Determine the correct padding value
+        if "input_ids" in key:
+            pad_val = pad_token_id
+        else:
+            pad_val = 0  # Masks (attention and response) are padded with 0
+            
+        # pad_sequence stacks them into a single tensor and pads the shorter ones
+        batched_dict[key] = pad_sequence(tensors, batch_first=True, padding_value=pad_val)
+        
+    return batched_dict
 
 def train_loop(policy, tokenizer, dataset, beta: float = DPO_BETA) -> None:
     """
@@ -140,7 +188,93 @@ def train_loop(policy, tokenizer, dataset, beta: float = DPO_BETA) -> None:
     in configs/train_config.py -- yours to tune. `beta` is passed in per run (--beta) so
     the sweep trains a separate adapter for each value.
     """
-    raise NotImplementedError("Implement the Part B DPO training loop.")
+    print("Preprocessing dataset...")
+    # dataset.map applies your function to every item in the dataset efficiently
+    # Assuming you import _to_messages from data_loader
+    def preprocess_fn(row):
+        # Extract the raw strings from the dataset row
+        prompt = row["prompt"]
+        chosen = row["chosen"]
+        rejected = row["rejected"]
+        
+        # Pass them to the provided tokenization function
+        # Note: Pass the tokenizer and max sequence length if the function requires them
+        tokenized_example = build_dpo_example(
+            tokenizer=tokenizer,
+            prompt=prompt,
+            chosen=chosen,
+            rejected=rejected,
+            # max_len=DPO_MAX_SEQ_LEN  # Uncomment if your function takes this argument
+        )
+        
+        # Return the dictionary of tokenized tensors 
+        # (e.g., chosen_input_ids, rejected_input_ids, masks)
+        return tokenized_example
+    # Assuming your dataset has columns like ['prompt', 'chosen', 'rejected']
+    original_columns = dataset.column_names
+
+    processed_dataset = dataset.map(
+        preprocess_fn,
+        batched=False,               # Process one row at a time
+        remove_columns=original_columns # CRITICAL STEP
+    )
+
+    # Ensure your tokenizer actually has a pad token set
+    if tokenizer.pad_token_id is None:
+        tokenizer.pad_token_id = tokenizer.eos_token_id
+
+    # Initialize the DataLoader
+    dataloader = torch.utils.data.DataLoader(
+        processed_dataset,
+        batch_size=DPO_BATCH_SIZE,  # From your train_config
+        shuffle=True,               # Shuffle the training data
+        collate_fn=lambda batch: dpo_collate_fn(batch, pad_token_id=tokenizer.pad_token_id)
+    )
+
+    optimizer = torch.optim.Adam(policy.parameters(), lr=DPO_LEARNING_RATE)
+
+    policy.train() # Set model to training mode
+    
+    for epoch in range(DPO_EPOCHS):
+        for step, batch in enumerate(dataloader):
+            # 1. Move everything to the GPU
+            chosen_input_ids = batch["chosen_input_ids"].to(policy.device)
+            chosen_attention_mask = batch["chosen_attention_mask"].to(policy.device)
+            chosen_response_mask = batch["chosen_response_mask"].to(policy.device)
+            rejected_input_ids = batch["rejected_input_ids"].to(policy.device)
+            rejected_attention_mask = batch["rejected_attention_mask"].to(policy.device)  
+            rejected_response_mask = batch["rejected_response_mask"].to(policy.device)  
+
+            policy_chosen_logps = sequence_log_prob(policy, chosen_input_ids, chosen_attention_mask, chosen_response_mask)
+            policy_rejected_logps = sequence_log_prob(policy, rejected_input_ids, rejected_attention_mask, rejected_response_mask)
+
+
+            with torch.no_grad():
+                with policy.disable_adapter():
+                    ref_chosen_logps = sequence_log_prob(
+                        model=policy, 
+                        input_ids=chosen_input_ids, 
+                        attention_mask=chosen_attention_mask, 
+                        response_mask=chosen_response_mask
+                    )
+                    ref_rejected_logps = sequence_log_prob(
+                        model=policy, 
+                        input_ids=rejected_input_ids, 
+                        attention_mask=rejected_attention_mask, 
+                        response_mask=rejected_response_mask
+                    )
+            dpo_loss_value = dpo_loss(
+                policy_chosen_logps=policy_chosen_logps,
+                policy_rejected_logps=policy_rejected_logps,
+                reference_chosen_logps=ref_chosen_logps,
+                reference_rejected_logps=ref_rejected_logps,
+                beta=beta
+            )
+            optimizer.zero_grad()
+            dpo_loss_value.backward()
+            optimizer.step()
+            if step % 10 == 0:  # Print every 10 steps
+                print(f"Epoch {epoch} | Step {step} | DPO Loss: {dpo_loss_value.item():.4f}")
 
 
 def main() -> None:
