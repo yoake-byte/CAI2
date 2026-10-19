@@ -128,7 +128,7 @@ def train_loop(model, tokenizer, dataset) -> None:
             "labels": padded_labels.to(model.device)
         }
 
-    dataloader = torch.nn.utils.data.DataLoader(
+    dataloader = torch.utils.data.DataLoader(
         processed_dataset, 
         batch_size=SFT_BATCH_SIZE, 
         shuffle=True, 
