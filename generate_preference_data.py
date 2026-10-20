@@ -54,10 +54,11 @@ def synthesize_pairs(n: int) -> list[dict]:
     print("Loading tokenizer and model...")
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     
+    # 1. Force GPU to prevent silent CPU offloading on crowded clusters
+    # 2. Use `dtype` instead of deprecated `torch_dtype`
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
-        torch_dtype=torch.bfloat16,
-        # 2. THE FIX: Force GPU. Prevent silent CPU offloading when cluster is crowded.
+        dtype=torch.bfloat16,
         device_map={"": torch.cuda.current_device() if torch.cuda.is_available() else 0}
     )
 
@@ -76,7 +77,7 @@ def synthesize_pairs(n: int) -> list[dict]:
         with torch.no_grad():
             out = model.generate(
                 **inputs, 
-                max_new_tokens=256, 
+                max_new_tokens=384,  # Increased to prevent tag truncation
                 temperature=0.8, 
                 do_sample=True,
                 pad_token_id=tokenizer.eos_token_id
@@ -85,14 +86,28 @@ def synthesize_pairs(n: int) -> list[dict]:
         gen = out[0][inputs["input_ids"].shape[1]:]
         return tokenizer.decode(gen, skip_special_tokens=True)
 
+    # Robust parsing helper to ignore Markdown bolding and colons
+    def parse_tags_robustly(text: str) -> dict | None:
+        cleaned = text.replace("**", "").replace(":", "")
+        
+        prompt_match = re.search(r'[PROMPT]\s*(.*?)\s*[CHOSEN]', cleaned, re.DOTALL | re.IGNORECASE)
+        chosen_match = re.search(r'[CHOSEN]\s*(.*?)\s*[REJECTED]', cleaned, re.DOTALL | re.IGNORECASE)
+        rejected_match = re.search(r'[REJECTED]\s*(.*)', cleaned, re.DOTALL | re.IGNORECASE)
+        
+        if prompt_match and chosen_match and rejected_match:
+            return {
+                "prompt": prompt_match.group(1).strip(),
+                "chosen": chosen_match.group(1).strip(),
+                "rejected": rejected_match.group(1).strip()
+            }
+        return None
+
     base_system = """You are a strict data formatting AI.
-    You must output ONLY the requested tags: [PROMPT], [CHOSEN], [REJECTED].
-    Do NOT include any conversational preamble (e.g., do NOT write "Here is the scenario", "Certainly!", or "Sure").
-    The [CHOSEN] and [REJECTED] responses must start IMMEDIATELY with the answer or question itself."""
+You must output ONLY the requested tags: [PROMPT], [CHOSEN], [REJECTED].
+Do NOT include any conversational preamble (e.g., do NOT write "Here is the scenario", "Certainly!", or "Sure").
+The [CHOSEN] and [REJECTED] responses must start IMMEDIATELY with the answer or question itself."""
   
     print("Generating ambiguous pairs...")
-    
-    # 3. Setup tqdm for ambiguous pairs
     pbar_ambig = tqdm(total=n_ambiguous, desc="Ambiguous Pairs")
     
     while len(pairs) < n_ambiguous:
@@ -106,68 +121,47 @@ Example:
 [REJECTED] You should add more RAM and upgrade your graphics card."""
         
         raw_text = generate_single_scenario(base_system, user_prompt)
+        parsed_data = parse_tags_robustly(raw_text)
         
-        try:
-            prompt_match = re.search(r'\[PROMPT\](.*?)\[CHOSEN\]', raw_text, re.DOTALL)
-            chosen_match = re.search(r'\[CHOSEN\](.*?)\[REJECTED\]', raw_text, re.DOTALL)
-            rejected_match = re.search(r'\[REJECTED\](.*)', raw_text, re.DOTALL)
-            
-            if prompt_match and chosen_match and rejected_match:
-                pairs.append({
-                    "class": "ambiguous",
-                    "prompt": prompt_match.group(1).strip(),
-                    "chosen": chosen_match.group(1).strip(),
-                    "rejected": rejected_match.group(1).strip()
-                })
-                pbar_ambig.update(1)  # 4. Update the progress bar on success
-        except Exception as e:
-            pass # Silently retry on failure to not mess up the tqdm output
-            
-    pbar_ambig.close() # 5. Close the progress bar
+        if parsed_data:
+            parsed_data["class"] = "ambiguous"
+            pairs.append(parsed_data)
+            pbar_ambig.update(1)
+        else:
+            # Uncomment the print statement below if it stalls to see exactly what Llama outputted
+            # print(f"\n[TAG MISSING - AMBIGUOUS] Raw output:\n{raw_text}\n")
+            pass
+
+    pbar_ambig.close()
 
     print("Generating clear pairs...")
     clear_pairs_count = 0
-    
-    # 6. Setup tqdm for clear pairs
     pbar_clear = tqdm(total=n_clear, desc="Clear Pairs")
     
     while clear_pairs_count < n_clear:
-        user_prompt = """Generate a CLEAR, specific, unambiguous user request. 
-You MUST randomly pick from one of these diverse domains: 
-1. Creative writing or roleplay
-2. Coding or technical instructions
-3. Translation or summarization
-4. Factual, historical, or scientific questions
-5. Everyday advice or professional communication
-
-The [CHOSEN] response must execute the task or answer the question directly, naturally, and confidently in 1-3 sentences. Never ask a clarifying question and never use conversational filler.
+        user_prompt = """Generate a CLEAR, specific, unambiguous user request from a random domain (such as history, programming, geography, or daily tasks).
+The [CHOSEN] response must execute the task or answer the question directly, naturally, and confidently in exactly 1 sentence. Do NOT ask any questions.
 The [REJECTED] response must ask an annoying, unnecessary clarifying question instead of just doing the task.
 
-Example (Translation):
-[PROMPT] Translate "Where is the library" into French.
+Example:
+[PROMPT] Translate "Where is the library?" into French.
 [CHOSEN] "Où est la bibliothèque ?"
-[REJECTED] Are you looking for a public library or a university library? Also, do you want formal or informal French?"""
+[REJECTED] Do you want the formal or informal translation?"""
         
         raw_text = generate_single_scenario(base_system, user_prompt)
+        parsed_data = parse_tags_robustly(raw_text)
         
-        try:
-            prompt_match = re.search(r'\[PROMPT\](.*?)\[CHOSEN\]', raw_text, re.DOTALL)
-            chosen_match = re.search(r'\[CHOSEN\](.*?)\[REJECTED\]', raw_text, re.DOTALL)
-            rejected_match = re.search(r'\[REJECTED\](.*)', raw_text, re.DOTALL)
+        if parsed_data:
+            parsed_data["class"] = "clear"
+            pairs.append(parsed_data)
+            clear_pairs_count += 1
+            pbar_clear.update(1)
+        else:
+            # Uncomment the print statement below if it stalls to see exactly what Llama outputted
+            # print(f"\n[TAG MISSING - CLEAR] Raw output:\n{raw_text}\n")
+            pass
             
-            if prompt_match and chosen_match and rejected_match:
-                pairs.append({
-                    "class": "clear",
-                    "prompt": prompt_match.group(1).strip(),
-                    "chosen": chosen_match.group(1).strip(),
-                    "rejected": rejected_match.group(1).strip()
-                })
-                clear_pairs_count += 1
-                pbar_clear.update(1) # 7. Update progress bar
-        except Exception as e:
-            pass 
-            
-    pbar_clear.close() # 8. Close progress bar
+    pbar_clear.close()
 
     return pairs
     # # 3. Define your strict formatting prompts
