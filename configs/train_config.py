@@ -47,9 +47,9 @@ SFT_MAX_SEQ_LEN = 1024
 # These three are the course default sweep -- you may change them, but keep at least
 # three distinct values and report all of them in results.json.
 
-DPO_BETAS = [0.05, 0.1, 0.5]
+DPO_BETAS = [0.5, 0.65, 0.8]
 DPO_BETA = 0.1  # Default used when --beta is not passed on the CLI.
-DPO_BATCH_SIZE = 2
+DPO_BATCH_SIZE = 4
 
 DPO_EPOCHS = 1
 DPO_LEARNING_RATE = 5e-6
