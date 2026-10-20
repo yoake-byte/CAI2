@@ -52,8 +52,8 @@
     },
     "sft": {
       "ask_rate": 1.0,
-      "answer_rate": 0.5,
-      "mmlu_acc": 0.2,
+      "answer_rate": 0.4,
+      "mmlu_acc": 0.4,
       "label_counts": {
         "ambiguous": {
           "ask": 10,
@@ -62,8 +62,8 @@
         },
         "clear": {
           "ask": 0,
-          "answer": 5,
-          "other": 5
+          "answer": 4,
+          "other": 6
         }
       }
     },
@@ -71,7 +71,7 @@
       {
         "ask_rate": 1.0,
         "answer_rate": 0.5,
-        "mmlu_acc": 0.2,
+        "mmlu_acc": 0.4,
         "label_counts": {
           "ambiguous": {
             "ask": 10,
@@ -89,7 +89,7 @@
       {
         "ask_rate": 1.0,
         "answer_rate": 0.5,
-        "mmlu_acc": 0.2,
+        "mmlu_acc": 0.4,
         "label_counts": {
           "ambiguous": {
             "ask": 10,
@@ -107,7 +107,7 @@
       {
         "ask_rate": 1.0,
         "answer_rate": 0.5,
-        "mmlu_acc": 0.2,
+        "mmlu_acc": 0.4,
         "label_counts": {
           "ambiguous": {
             "ask": 10,
