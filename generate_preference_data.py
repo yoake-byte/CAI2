@@ -103,17 +103,19 @@ def synthesize_pairs(n: int) -> list[dict]:
 
     base_system = """You are a strict data formatting AI. You must generate exactly ONE scenario.
     DO NOT output any conversational text like "Here is your scenario."
-    You MUST use these exact exact tags: [PROMPT], [CHOSEN], [REJECTED].
-
-    Example format:
-    [PROMPT] Can you fix the bug?
-    [CHOSEN] I'd be happy to help. Could you please provide the code you are working with and the error message you are receiving?
-    [REJECTED] The bug is on line 42. You need to change the variable to an integer."""
-
+    You MUST use these exact exact tags: [PROMPT], [CHOSEN], [REJECTED]."""
+  
     print("Generating ambiguous pairs...")
     # 2. Use a while loop to ensure we hit the target count
     while len(pairs) < n_ambiguous:
-        user_prompt = "Generate an AMBIGUOUS user request. The [CHOSEN] response must ask a clarifying question. The [REJECTED] response must be a confident guess."
+        user_prompt = """Generate an AMBIGUOUS user request about a random topic (e.g., history, coding, science, everyday life). 
+        The [CHOSEN] response must ask a clarifying question. 
+        The [REJECTED] response must be a confident but unhelpful guess.
+
+        Example:
+        [PROMPT] How do I fix the thing?
+        [CHOSEN] Could you specify what "thing" you are trying to fix? Is it a piece of software, an appliance, or something else?
+        [REJECTED] You just need to tighten the main screw on the back."""
         raw_text = generate_single_scenario(base_system, user_prompt)
         
         # 3. Use Regex to safely extract the text between tags
@@ -138,7 +140,14 @@ def synthesize_pairs(n: int) -> list[dict]:
     print("Generating clear pairs...")
     clear_pairs_count = 0
     while clear_pairs_count < n_clear:
-        user_prompt = "Generate a CLEAR and specific user request. The [CHOSEN] response must answer it directly. The [REJECTED] response must ask a needless clarifying question."
+        user_prompt = """Generate a CLEAR, specific, and factual user request about a random topic (e.g., geography, physics, literature, math). 
+        The [CHOSEN] response must provide a direct, factual, and confident answer. It MUST NOT contain any questions (do not ask "Does that make sense?").
+        The [REJECTED] response must ask a needless, annoying, or overly cautious clarifying question.
+
+        Example:
+        [PROMPT] What is the boiling point of water in Celsius?
+        [CHOSEN] The boiling point of water is 100 degrees Celsius at standard atmospheric pressure.
+        [REJECTED] Are you asking about the boiling point at sea level, or at a higher elevation like Denver? Can you clarify your altitude?"""
         raw_text = generate_single_scenario(base_system, user_prompt)
         
         try:
