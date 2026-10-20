@@ -53,33 +53,18 @@ def synthesize_pairs(n: int) -> list[dict]:
     model_name = "meta-llama/Llama-3.1-8B-Instruct"
     print("Loading tokenizer and model...")
     tokenizer = AutoTokenizer.from_pretrained(model_name)
+    
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         torch_dtype=torch.bfloat16,
-        device_map="auto"
+        # 2. THE FIX: Force GPU. Prevent silent CPU offloading when cluster is crowded.
+        device_map={"": torch.cuda.current_device() if torch.cuda.is_available() else 0}
     )
-    """
-    TODO (student): produce `n` preference pairs, balanced across the two classes.
 
-    Return a list of dicts, each:
-        {"class": "ambiguous" | "clear",
-         "prompt": "<user request>",
-         "chosen": "<preferred response>",
-         "rejected": "<dispreferred response>"}
-
-    (The "id" field is added for you by write_pairs().)
-
-    Approach is up to you. A common recipe: prompt an LLM to generate ambiguous and
-    clear requests across varied domains, then for each request generate both a
-    clarifying-question response and a direct-answer response, and assign chosen/rejected
-    by the request's class. Keep DATA_SEED fixed wherever you sample, so your data is reproducible.
-    """
-    # Calculate target counts
     n_ambiguous = n // 2
     n_clear = n - n_ambiguous
     pairs = []
     
-    # 2. Define a helper function for generation
     def generate_single_scenario(system_prompt: str, user_prompt: str) -> str:
         messages = [
             {"role": "system", "content": system_prompt},
@@ -88,12 +73,11 @@ def synthesize_pairs(n: int) -> list[dict]:
         text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         inputs = tokenizer(text, return_tensors="pt").to(model.device)
 
-        #model generate
         with torch.no_grad():
             out = model.generate(
                 **inputs, 
                 max_new_tokens=256, 
-                temperature=0.8, # Temperature > 0 ensures diversity across 1000 samples
+                temperature=0.8, 
                 do_sample=True,
                 pad_token_id=tokenizer.eos_token_id
             )
@@ -107,7 +91,10 @@ def synthesize_pairs(n: int) -> list[dict]:
     The [CHOSEN] and [REJECTED] responses must start IMMEDIATELY with the answer or question itself."""
   
     print("Generating ambiguous pairs...")
-    # 2. Use a while loop to ensure we hit the target count
+    
+    # 3. Setup tqdm for ambiguous pairs
+    pbar_ambig = tqdm(total=n_ambiguous, desc="Ambiguous Pairs")
+    
     while len(pairs) < n_ambiguous:
         user_prompt = """Generate an AMBIGUOUS user request lacking critical context (e.g., code debugging without code, vague scheduling, unspecified terms).
 The [CHOSEN] response must be a polite, direct 1-2 sentence clarifying question requesting the missing details.
@@ -117,11 +104,10 @@ Example:
 [PROMPT] How do I make it run faster?
 [CHOSEN] Could you specify what program, script, or hardware you are trying to optimize?
 [REJECTED] You should add more RAM and upgrade your graphics card."""
+        
         raw_text = generate_single_scenario(base_system, user_prompt)
         
-        # 3. Use Regex to safely extract the text between tags
         try:
-            # DOTALL allows the regex to match across multiple lines
             prompt_match = re.search(r'\[PROMPT\](.*?)\[CHOSEN\]', raw_text, re.DOTALL)
             chosen_match = re.search(r'\[CHOSEN\](.*?)\[REJECTED\]', raw_text, re.DOTALL)
             rejected_match = re.search(r'\[REJECTED\](.*)', raw_text, re.DOTALL)
@@ -133,13 +119,18 @@ Example:
                     "chosen": chosen_match.group(1).strip(),
                     "rejected": rejected_match.group(1).strip()
                 })
-            else:
-                print("Tags missing in generation, retrying...")
+                pbar_ambig.update(1)  # 4. Update the progress bar on success
         except Exception as e:
-            print(f"Parsing error, retrying... ({e})")
+            pass # Silently retry on failure to not mess up the tqdm output
+            
+    pbar_ambig.close() # 5. Close the progress bar
 
     print("Generating clear pairs...")
     clear_pairs_count = 0
+    
+    # 6. Setup tqdm for clear pairs
+    pbar_clear = tqdm(total=n_clear, desc="Clear Pairs")
+    
     while clear_pairs_count < n_clear:
         user_prompt = """Generate a CLEAR, specific, unambiguous user request. 
 You MUST randomly pick from one of these diverse domains: 
@@ -156,6 +147,7 @@ Example (Translation):
 [PROMPT] Translate "Where is the library" into French.
 [CHOSEN] "Où est la bibliothèque ?"
 [REJECTED] Are you looking for a public library or a university library? Also, do you want formal or informal French?"""
+        
         raw_text = generate_single_scenario(base_system, user_prompt)
         
         try:
@@ -171,13 +163,13 @@ Example (Translation):
                     "rejected": rejected_match.group(1).strip()
                 })
                 clear_pairs_count += 1
-            else:
-                print("Tags missing in generation, retrying...")
+                pbar_clear.update(1) # 7. Update progress bar
         except Exception as e:
-            print(f"Parsing error, retrying... ({e})")
+            pass 
+            
+    pbar_clear.close() # 8. Close progress bar
 
     return pairs
-
     # # 3. Define your strict formatting prompts
     # base_system = """You are an AI data generator. Generate exactly ONE scenario. 
     # You MUST format your response exactly like this, with no extra text:
