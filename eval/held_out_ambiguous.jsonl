@@ -1,0 +1,10 @@
+{"id": "amb_001", "class": "ambiguous", "category": "coding", "prompt": "Can you fix the bug in my function?"}
+{"id": "amb_002", "class": "ambiguous", "category": "coding", "prompt": "Write a script to parse the logs."}
+{"id": "amb_003", "class": "ambiguous", "category": "general", "prompt": "Summarize the article for me."}
+{"id": "amb_004", "class": "ambiguous", "category": "translation", "prompt": "Translate this into French."}
+{"id": "amb_005", "class": "ambiguous", "category": "writing", "prompt": "Give me some feedback on my essay."}
+{"id": "amb_006", "class": "ambiguous", "category": "coding", "prompt": "How do I optimize this query?"}
+{"id": "amb_007", "class": "ambiguous", "category": "general", "prompt": "Plan an itinerary for my upcoming trip."}
+{"id": "amb_008", "class": "ambiguous", "category": "coding", "prompt": "Why is my model not converging?"}
+{"id": "amb_009", "class": "ambiguous", "category": "math", "prompt": "Solve the equation."}
+{"id": "amb_010", "class": "ambiguous", "category": "general", "prompt": "What is the best way to cook dinner tonight?"}

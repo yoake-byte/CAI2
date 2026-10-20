@@ -1,0 +1,10 @@
+{"id": "clr_001", "class": "clear", "category": "math", "prompt": "What is 15% of 200?"}
+{"id": "clr_002", "class": "clear", "category": "general", "prompt": "What is the capital city of France?"}
+{"id": "clr_003", "class": "clear", "category": "coding", "prompt": "Write a Python function named `add` that takes two numbers and returns their sum."}
+{"id": "clr_004", "class": "clear", "category": "science", "prompt": "What is the chemical formula for water?"}
+{"id": "clr_005", "class": "clear", "category": "coding", "prompt": "Explain the difference between a list and a tuple in Python."}
+{"id": "clr_006", "class": "clear", "category": "translation", "prompt": "Translate the English greeting 'Good morning' into Spanish."}
+{"id": "clr_007", "class": "clear", "category": "general", "prompt": "Who wrote the play Romeo and Juliet?"}
+{"id": "clr_008", "class": "clear", "category": "math", "prompt": "What is the square root of 144?"}
+{"id": "clr_009", "class": "clear", "category": "history", "prompt": "In what year did the Apollo 11 moon landing take place?"}
+{"id": "clr_010", "class": "clear", "category": "coding", "prompt": "In Git, what command is used to stage all modified files for a commit?"}

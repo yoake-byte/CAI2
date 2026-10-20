@@ -1,0 +1,5 @@
+{"id": "m_001", "subject": "computer_science", "question": "What does CPU stand for?", "choices": ["Central Processing Unit", "Computer Personal Unit", "Central Process Utility", "Central Processor Universal"], "answer": 0}
+{"id": "m_002", "subject": "machine_learning", "question": "Which of the following is an activation function commonly used in deep networks?", "choices": ["SVM", "ReLU", "K-Means", "PCA"], "answer": 1}
+{"id": "m_003", "subject": "mathematics", "question": "What is the derivative of x^2 with respect to x?", "choices": ["x", "2", "2x", "x^3"], "answer": 2}
+{"id": "m_004", "subject": "networking", "question": "Which protocol operates at the Transport layer of the OSI model?", "choices": ["IP", "HTTP", "Ethernet", "TCP"], "answer": 3}
+{"id": "m_005", "subject": "general_science", "question": "Which planet is known as the Red Planet?", "choices": ["Venus", "Mars", "Jupiter", "Saturn"], "answer": 1}
