@@ -52,5 +52,5 @@ DPO_BETA = 0.1  # Default used when --beta is not passed on the CLI.
 DPO_BATCH_SIZE = 4
 
 DPO_EPOCHS = 1
-DPO_LEARNING_RATE = 5e-6
+DPO_LEARNING_RATE = 1e-6
 DPO_MAX_SEQ_LEN = 1024
