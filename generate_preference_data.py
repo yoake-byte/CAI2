@@ -101,21 +101,22 @@ def synthesize_pairs(n: int) -> list[dict]:
         gen = out[0][inputs["input_ids"].shape[1]:]
         return tokenizer.decode(gen, skip_special_tokens=True)
 
-    base_system = """You are a strict data formatting AI. You must generate exactly ONE scenario.
-    DO NOT output any conversational text like "Here is your scenario."
-    You MUST use these exact exact tags: [PROMPT], [CHOSEN], [REJECTED]."""
+    base_system = """You are a strict data formatting AI.
+    You must output ONLY the requested tags: [PROMPT], [CHOSEN], [REJECTED].
+    Do NOT include any conversational preamble (e.g., do NOT write "Here is the scenario", "Certainly!", or "Sure").
+    The [CHOSEN] and [REJECTED] responses must start IMMEDIATELY with the answer or question itself."""
   
     print("Generating ambiguous pairs...")
     # 2. Use a while loop to ensure we hit the target count
     while len(pairs) < n_ambiguous:
-        user_prompt = """Generate an AMBIGUOUS user request about a random topic (e.g., history, coding, science, everyday life). 
-        The [CHOSEN] response must ask a clarifying question. 
-        The [REJECTED] response must be a confident but unhelpful guess.
+        user_prompt = """Generate an AMBIGUOUS user request lacking critical context (e.g., code debugging without code, vague scheduling, unspecified terms).
+The [CHOSEN] response must be a polite, direct 1-2 sentence clarifying question requesting the missing details.
+The [REJECTED] response must be an ungrounded guess attempting to answer without enough information.
 
-        Example:
-        [PROMPT] How do I fix the thing?
-        [CHOSEN] Could you specify what "thing" you are trying to fix? Is it a piece of software, an appliance, or something else?
-        [REJECTED] You just need to tighten the main screw on the back."""
+Example:
+[PROMPT] How do I make it run faster?
+[CHOSEN] Could you specify what program, script, or hardware you are trying to optimize?
+[REJECTED] You should add more RAM and upgrade your graphics card."""
         raw_text = generate_single_scenario(base_system, user_prompt)
         
         # 3. Use Regex to safely extract the text between tags
@@ -140,14 +141,21 @@ def synthesize_pairs(n: int) -> list[dict]:
     print("Generating clear pairs...")
     clear_pairs_count = 0
     while clear_pairs_count < n_clear:
-        user_prompt = """Generate a CLEAR, specific, and factual user request about a random topic (e.g., geography, physics, literature, math). 
-        The [CHOSEN] response must provide a direct, factual, and confident answer. It MUST NOT contain any questions (do not ask "Does that make sense?").
-        The [REJECTED] response must ask a needless, annoying, or overly cautious clarifying question.
+        user_prompt = """Generate a CLEAR, specific, unambiguous user request. 
+You MUST randomly pick from one of these diverse domains: 
+1. Creative writing or roleplay
+2. Coding or technical instructions
+3. Translation or summarization
+4. Factual, historical, or scientific questions
+5. Everyday advice or professional communication
 
-        Example:
-        [PROMPT] What is the boiling point of water in Celsius?
-        [CHOSEN] The boiling point of water is 100 degrees Celsius at standard atmospheric pressure.
-        [REJECTED] Are you asking about the boiling point at sea level, or at a higher elevation like Denver? Can you clarify your altitude?"""
+The [CHOSEN] response must execute the task or answer the question directly, naturally, and confidently in 1-3 sentences. Never ask a clarifying question and never use conversational filler.
+The [REJECTED] response must ask an annoying, unnecessary clarifying question instead of just doing the task.
+
+Example (Translation):
+[PROMPT] Translate "Where is the library" into French.
+[CHOSEN] "Où est la bibliothèque ?"
+[REJECTED] Are you looking for a public library or a university library? Also, do you want formal or informal French?"""
         raw_text = generate_single_scenario(base_system, user_prompt)
         
         try:
