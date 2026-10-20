@@ -23,7 +23,7 @@
 module load anaconda3
 conda activate CAI_A2
 
-BETAS=(0.05 0.1 0.5)
+BETAS=(0.5 0.65 0.8)
 BETA=${BETAS[$SLURM_ARRAY_TASK_ID]}
 
 python train_dpo.py \
