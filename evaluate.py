@@ -123,18 +123,46 @@ def generate_responses(model, tokenizer, prompts, max_new_tokens=EVAL_MAX_NEW_TO
 # --- Behavioral rates (ask / answer via judge). --------------------------------
 
 
+# def _rate_or_none(model, tokenizer, judge, items, target):
+#     """Returns (rate, label_counts) for one set, or (None, None) if the set is absent."""
+#     if not items:
+#         return None, None
+
+#     prompts = [r["prompt"] for r in items]
+#     responses = generate_responses(model, tokenizer, prompts)
+
+#     res = judge.rate(zip(prompts, responses), target=target)
+#     return res["rate"], res["counts"]
+
+
 def _rate_or_none(model, tokenizer, judge, items, target):
-    """Returns (rate, label_counts) for one set, or (None, None) if the set is absent."""
+    """Returns (rate, label_counts, records) for one set, or (None, None, []) if absent."""
     if not items:
-        return None, None
+        return None, None, []
 
     prompts = [r["prompt"] for r in items]
     responses = generate_responses(model, tokenizer, prompts)
 
+    # Note: judge.rate evaluates prompt-response pairs
     res = judge.rate(zip(prompts, responses), target=target)
-    return res["rate"], res["counts"]
 
+    records = []
+    # If the judge object exposes per-sample labels:
+    labels = res.get("labels", [None] * len(items))
 
+    for item, prompt, resp, lbl in zip(items, prompts, responses, labels):
+        records.append(
+            {
+                "id": item.get("id"),
+                "category": item.get("category", "unknown"),
+                "prompt": prompt,
+                "response": resp,
+                "judge_label": lbl,
+            }
+        )
+
+    return res["rate"], res["counts"], records
+  
 # --- MMLU accuracy. ------------------------------------------------------------
 
 
@@ -188,27 +216,48 @@ def build_judge():
 
 # --- One run. ------------------------------------------------------------------
 
-
 def evaluate_policy(model, tokenizer, judge, ambiguous, clear, mmlu):
-    ask_rate, amb_counts = _rate_or_none(model, tokenizer, judge, ambiguous, "ask")
-
-    answer_rate, clr_counts = _rate_or_none(model, tokenizer, judge, clear, "answer")
+    ask_rate, amb_counts, amb_records = _rate_or_none(
+        model, tokenizer, judge, ambiguous, "ask"
+    )
+    answer_rate, clr_counts, clr_records = _rate_or_none(
+        model, tokenizer, judge, clear, "answer"
+    )
 
     mmlu_acc = mmlu_accuracy(model, tokenizer, mmlu)
     out = {"ask_rate": ask_rate, "answer_rate": answer_rate, "mmlu_acc": mmlu_acc}
 
     label_counts = {}
-
     if amb_counts is not None:
         label_counts["ambiguous"] = amb_counts
-
     if clr_counts is not None:
         label_counts["clear"] = clr_counts
-
     if label_counts:
         out["label_counts"] = label_counts
 
-    return out
+    transcripts = {"ambiguous": amb_records, "clear": clr_records}
+
+    return out, transcripts
+# def evaluate_policy(model, tokenizer, judge, ambiguous, clear, mmlu):
+#     ask_rate, amb_counts = _rate_or_none(model, tokenizer, judge, ambiguous, "ask")
+
+#     answer_rate, clr_counts = _rate_or_none(model, tokenizer, judge, clear, "answer")
+
+#     mmlu_acc = mmlu_accuracy(model, tokenizer, mmlu)
+#     out = {"ask_rate": ask_rate, "answer_rate": answer_rate, "mmlu_acc": mmlu_acc}
+
+#     label_counts = {}
+
+#     if amb_counts is not None:
+#         label_counts["ambiguous"] = amb_counts
+
+#     if clr_counts is not None:
+#         label_counts["clear"] = clr_counts
+
+#     if label_counts:
+#         out["label_counts"] = label_counts
+
+#     return out
 
 
 def _safe_load(loader, name):
@@ -235,7 +284,6 @@ def _validate(results):
     except Exception as exc:  # ImportError, ValidationError, missing schema -- all non-fatal.
         print(f"[warn] results.json did not validate ({type(exc).__name__}: {exc}).")
 
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -245,13 +293,18 @@ def main():
         default=DPO_BETAS,
         help="DPO betas to evaluate (default: every value in DPO_BETAS).",
     )
+    parser.add_argument(
+        "--save_transcripts",
+        action="store_true",
+        default=True,
+        help="Whether to save all model responses to eval/transcripts.jsonl",
+    )
     args = parser.parse_args()
 
     torch.manual_seed(EVAL_SEED)
 
     print("Loading eval sets (ambiguous / clear / MMLU)...")
     ambiguous = _safe_load(load_ambiguous_set, "ambiguous held-out set")
-
     clear = _safe_load(load_clear_set, "clear held-out set")
     mmlu = _safe_load(load_mmlu_slice, "MMLU slice")
 
@@ -264,16 +317,22 @@ def main():
     judge = build_judge()
     tokenizer = load_tokenizer(SFT_CHECKPOINT_DIR)
 
+    all_transcripts = []
+
     print(f"[base] loading {MODEL_ID}...")
     base = load_base_policy()
-
-    runs_base = evaluate_policy(base, tokenizer, judge, ambiguous, clear, mmlu)
+    runs_base, base_transcripts = evaluate_policy(
+        base, tokenizer, judge, ambiguous, clear, mmlu
+    )
+    all_transcripts.append({"policy": "base", "generations": base_transcripts})
     _free(base)
 
     print(f"[sft] loading adapter from {SFT_CHECKPOINT_DIR}...")
     sft = load_adapter_policy(SFT_CHECKPOINT_DIR)
-
-    runs_sft = evaluate_policy(sft, tokenizer, judge, ambiguous, clear, mmlu)
+    runs_sft, sft_transcripts = evaluate_policy(
+        sft, tokenizer, judge, ambiguous, clear, mmlu
+    )
+    all_transcripts.append({"policy": "sft", "generations": sft_transcripts})
     _free(sft)
 
     dpo_runs = []
@@ -281,10 +340,14 @@ def main():
         ckpt = dpo_checkpoint_dir(beta)
         print(f"[dpo beta={beta}] loading adapter from {ckpt}...")
         policy = load_adapter_policy(ckpt)
-
-        metrics = evaluate_policy(policy, tokenizer, judge, ambiguous, clear, mmlu)
+        metrics, dpo_transcripts = evaluate_policy(
+            policy, tokenizer, judge, ambiguous, clear, mmlu
+        )
         metrics["beta"] = beta
         dpo_runs.append(metrics)
+        all_transcripts.append(
+            {"policy": f"dpo_beta_{beta}", "generations": dpo_transcripts}
+        )
         _free(policy)
 
     results = {
@@ -307,14 +370,100 @@ def main():
         "runs": {"base": runs_base, "sft": runs_sft, "dpo": dpo_runs},
     }
 
+    # Write results.json exactly as required
     os.makedirs(os.path.dirname(RESULTS_PATH), exist_ok=True)
     with open(RESULTS_PATH, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2)
+
+    # Write out transcripts for your report
+    transcripts_path = os.path.join(EVAL_DIR, "transcripts.json")
+    with open(transcripts_path, "w", encoding="utf-8") as f:
+        json.dump(all_transcripts, f, indent=2)
+    print(f"Saved evaluation transcripts to {transcripts_path}")
 
     _validate(results)
     print("\n===== results.json =====")
     print(json.dumps(results, indent=2))
     print(f"\nSaved to {RESULTS_PATH}")
+# def main():
+#     parser = argparse.ArgumentParser(description=__doc__)
+#     parser.add_argument(
+#         "--betas",
+#         type=float,
+#         nargs="*",
+#         default=DPO_BETAS,
+#         help="DPO betas to evaluate (default: every value in DPO_BETAS).",
+#     )
+#     args = parser.parse_args()
+
+#     torch.manual_seed(EVAL_SEED)
+
+#     print("Loading eval sets (ambiguous / clear / MMLU)...")
+#     ambiguous = _safe_load(load_ambiguous_set, "ambiguous held-out set")
+
+#     clear = _safe_load(load_clear_set, "clear held-out set")
+#     mmlu = _safe_load(load_mmlu_slice, "MMLU slice")
+
+#     if not (ambiguous or clear or mmlu):
+#         raise SystemExit(
+#             "No eval sets found under eval/. Graders: place the hidden test set there. "
+#             "Students: add your own dev files to self-evaluate (see eval/README.md)."
+#         )
+
+#     judge = build_judge()
+#     tokenizer = load_tokenizer(SFT_CHECKPOINT_DIR)
+
+#     print(f"[base] loading {MODEL_ID}...")
+#     base = load_base_policy()
+
+#     runs_base = evaluate_policy(base, tokenizer, judge, ambiguous, clear, mmlu)
+#     _free(base)
+
+#     print(f"[sft] loading adapter from {SFT_CHECKPOINT_DIR}...")
+#     sft = load_adapter_policy(SFT_CHECKPOINT_DIR)
+
+#     runs_sft = evaluate_policy(sft, tokenizer, judge, ambiguous, clear, mmlu)
+#     _free(sft)
+
+#     dpo_runs = []
+#     for beta in args.betas:
+#         ckpt = dpo_checkpoint_dir(beta)
+#         print(f"[dpo beta={beta}] loading adapter from {ckpt}...")
+#         policy = load_adapter_policy(ckpt)
+
+#         metrics = evaluate_policy(policy, tokenizer, judge, ambiguous, clear, mmlu)
+#         metrics["beta"] = beta
+#         dpo_runs.append(metrics)
+#         _free(policy)
+
+#     results = {
+#         "schema_version": "1.0",
+#         "metadata": {
+#             "base_model": MODEL_ID,
+#             "seeds": {"data": EVAL_SEED, "train": EVAL_SEED, "eval": EVAL_SEED},
+#             "judge": {
+#                 "backend": JUDGE_BACKEND,
+#                 "model": JUDGE_MODEL,
+#                 "rubric_version": RUBRIC_VERSION,
+#             },
+#             "betas": list(args.betas),
+#         },
+#         "eval_sets": {
+#             "ambiguous": {"path": "eval/held_out_ambiguous.jsonl", "n": len(ambiguous)},
+#             "clear": {"path": "eval/held_out_clear.jsonl", "n": len(clear)},
+#             "mmlu": {"path": "eval/mmlu_slice.jsonl", "n": len(mmlu)},
+#         },
+#         "runs": {"base": runs_base, "sft": runs_sft, "dpo": dpo_runs},
+#     }
+
+#     os.makedirs(os.path.dirname(RESULTS_PATH), exist_ok=True)
+#     with open(RESULTS_PATH, "w", encoding="utf-8") as f:
+#         json.dump(results, f, indent=2)
+
+#     _validate(results)
+#     print("\n===== results.json =====")
+#     print(json.dumps(results, indent=2))
+#     print(f"\nSaved to {RESULTS_PATH}")
 
 
 if __name__ == "__main__":
