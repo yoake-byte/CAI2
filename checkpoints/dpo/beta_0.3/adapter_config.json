@@ -31,8 +31,8 @@
   "target_modules": [
     "o_proj",
     "q_proj",
-    "v_proj",
-    "k_proj"
+    "k_proj",
+    "v_proj"
   ],
   "target_parameters": null,
   "task_type": "CAUSAL_LM",
