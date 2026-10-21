@@ -13,9 +13,9 @@
       "rubric_version": "1.0"
     },
     "betas": [
-      0.3,
-      0.5,
-      0.7
+      0.1,
+      0.2,
+      0.3
     ]
   },
   "eval_sets": {
@@ -51,32 +51,68 @@
       }
     },
     "sft": {
-      "ask_rate": 1.0,
-      "answer_rate": 0.4,
+      "ask_rate": 0.9,
+      "answer_rate": 0.5,
       "mmlu_acc": 0.4,
       "label_counts": {
         "ambiguous": {
-          "ask": 10,
+          "ask": 9,
           "answer": 0,
-          "other": 0
+          "other": 1
         },
         "clear": {
           "ask": 0,
-          "answer": 4,
-          "other": 6
+          "answer": 5,
+          "other": 5
         }
       }
     },
     "dpo": [
       {
-        "ask_rate": 1.0,
+        "ask_rate": 0.9,
         "answer_rate": 0.5,
         "mmlu_acc": 0.4,
         "label_counts": {
           "ambiguous": {
-            "ask": 10,
+            "ask": 9,
             "answer": 0,
-            "other": 0
+            "other": 1
+          },
+          "clear": {
+            "ask": 0,
+            "answer": 5,
+            "other": 5
+          }
+        },
+        "beta": 0.1
+      },
+      {
+        "ask_rate": 0.9,
+        "answer_rate": 0.5,
+        "mmlu_acc": 0.4,
+        "label_counts": {
+          "ambiguous": {
+            "ask": 9,
+            "answer": 0,
+            "other": 1
+          },
+          "clear": {
+            "ask": 0,
+            "answer": 5,
+            "other": 5
+          }
+        },
+        "beta": 0.2
+      },
+      {
+        "ask_rate": 0.9,
+        "answer_rate": 0.5,
+        "mmlu_acc": 0.4,
+        "label_counts": {
+          "ambiguous": {
+            "ask": 9,
+            "answer": 0,
+            "other": 1
           },
           "clear": {
             "ask": 0,
@@ -85,42 +121,6 @@
           }
         },
         "beta": 0.3
-      },
-      {
-        "ask_rate": 1.0,
-        "answer_rate": 0.5,
-        "mmlu_acc": 0.4,
-        "label_counts": {
-          "ambiguous": {
-            "ask": 10,
-            "answer": 0,
-            "other": 0
-          },
-          "clear": {
-            "ask": 0,
-            "answer": 5,
-            "other": 5
-          }
-        },
-        "beta": 0.5
-      },
-      {
-        "ask_rate": 1.0,
-        "answer_rate": 0.5,
-        "mmlu_acc": 0.4,
-        "label_counts": {
-          "ambiguous": {
-            "ask": 10,
-            "answer": 0,
-            "other": 0
-          },
-          "clear": {
-            "ask": 0,
-            "answer": 5,
-            "other": 5
-          }
-        },
-        "beta": 0.7
       }
     ]
   }
