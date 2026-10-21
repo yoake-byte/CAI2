@@ -867,296 +867,7 @@
     }
   },
   {
-    "policy": "dpo_beta_0.065",
-    "generations": {
-      "ambiguous": [
-        {
-          "id": "amb_001",
-          "category": "writing",
-          "prompt": "Draft an email to my boss letting them know I'll be late tomorrow.",
-          "response": "Subject: Notification of Expected Late Arrival Tomorrow\n\nDear [Boss's Name], I'm expecting to arrive late tomorrow due to unforeseen circumstances. I'll make every effort to arrive as soon as possible.",
-          "judge_label": null
-        },
-        {
-          "id": "amb_002",
-          "category": "coding",
-          "prompt": "Write a Python script to scrape articles from the news website.",
-          "response": "assistant\n\nTo scrape articles from a news website, you can use a library such as BeautifulSoup and requests. Here's an example of how you can do it using Python:\n\n```python\nimport requests\nfrom bs4 import BeautifulSoup\nimport time\n\ndef scrape_news(url):\n    try:\n        response = requests.get(url)\n        response.raise_for_status()\n        soup = BeautifulSoup(response.content, 'html.parser')\n        articles = soup.find_all('article')\n        return articles\n    except requests.exceptions.RequestException as e:\n        print(f\"An error occurred: {e}\")\n        return []\n\nurl = 'https://www.example.com/news'\narticles = scrape_news(url)\nfor article in articles:\n    print(article.text)\n```\n\nPlease note that this script will only work if the website allows web scraping and does not have any anti-scraping measures in place. Also, be sure to check the website's terms of service before scraping.",
-          "judge_label": null
-        },
-        {
-          "id": "amb_003",
-          "category": "general",
-          "prompt": "Create a 3-day travel itinerary for my upcoming trip.",
-          "response": "assistant\n\nCould you please provide more information about your destination, travel dates, and preferred activities or interests so I can help create a tailored itinerary for you?",
-          "judge_label": null
-        },
-        {
-          "id": "amb_004",
-          "category": "writing",
-          "prompt": "Write a cover letter for the software engineering job I'm applying for.",
-          "response": "assistant\n\nCould you please provide more information about the job description, the company, and your relevant skills and experience in software engineering?",
-          "judge_label": null
-        },
-        {
-          "id": "amb_005",
-          "category": "general",
-          "prompt": "What's the best way to train my new puppy?",
-          "response": "assistant can you provide more information about your puppy's age, breed, and any specific needs or preferences you have for training, such as housebreaking or obedience training?",
-          "judge_label": null
-        },
-        {
-          "id": "amb_006",
-          "category": "coding",
-          "prompt": "Can you write a SQL query to get the top users from the database?",
-          "response": "To get the top users from the database, you can use a query like this: SELECT TOP 10 * FROM users ORDER BY user_id DESC;",
-          "judge_label": null
-        },
-        {
-          "id": "amb_007",
-          "category": "math",
-          "prompt": "Calculate the total return on investment for my portfolio.",
-          "response": "assistant\nCould you please provide the current value of your portfolio and the interest rates or returns you've received so far?",
-          "judge_label": null
-        },
-        {
-          "id": "amb_008",
-          "category": "writing",
-          "prompt": "Write a short blog post about the new technology.",
-          "response": "assistant\n\nCould you please specify what type of new technology you are referring to, such as a new gadget, software, or innovation in a specific industry?",
-          "judge_label": null
-        },
-        {
-          "id": "amb_009",
-          "category": "general",
-          "prompt": "Give me a workout routine I can do at home.",
-          "response": "assistant\nCould you please specify what type of workout you're looking to do (e.g., cardio, strength training, flexibility, etc.) and how many days per week you have available for exercise?",
-          "judge_label": null
-        },
-        {
-          "id": "amb_010",
-          "category": "coding",
-          "prompt": "Create a regex pattern to validate the user input.",
-          "response": "assistant\n\nCould you please provide an example of the type of input you are trying to validate (e.g., email, phone number, password, etc.) and what you are trying to validate against?",
-          "judge_label": null
-        },
-        {
-          "id": "amb_011",
-          "category": "general",
-          "prompt": "How do I fix the leaky pipe in my house?",
-          "response": "assistant can you provide more details about the type of pipe and the location of the leak, as well as any other relevant information about the issue you're experiencing?",
-          "judge_label": null
-        },
-        {
-          "id": "amb_012",
-          "category": "writing",
-          "prompt": "Summarize the events of the Civil War for a school project.",
-          "response": "The American Civil War (1861-1865) was a pivotal conflict between the Union (the Northern states) and the Confederacy (the Southern states) over issues of slavery, states' rights, and economic and cultural differences. The war began on April 12, 1861, when Confederate forces fired on Union troops at Fort Sumter in South Carolina, and ended on April 9, 1865, with the surrender of Confederate General Robert E. Lee to Union General Ulysses S. Grant at Appomattox Court House in Virginia. The war resulted in the deaths of an estimated 620,000 to 750,000 soldiers and civilians and led to the abolition of slavery in the United States.",
-          "judge_label": null
-        },
-        {
-          "id": "amb_013",
-          "category": "coding",
-          "prompt": "Write a React component for a navigation bar.",
-          "response": "assistant\n\nCould you provide more details about the specific requirements for the navigation bar, such as its size, layout, and any specific design elements you'd like to include?",
-          "judge_label": null
-        },
-        {
-          "id": "amb_014",
-          "category": "general",
-          "prompt": "What are the tax implications if I sell my car?",
-          "response": "assistant\nCould you please provide the make, model, and year of your vehicle, as well as your location, to better understand the tax implications of selling it?",
-          "judge_label": null
-        },
-        {
-          "id": "amb_015",
-          "category": "writing",
-          "prompt": "Draft a short story about a detective.",
-          "response": "assistant\n\nDetective Jameson sat at his desk, sipping his cold coffee as he reviewed the case files for the latest string of burglaries in the upscale neighborhood. The latest break in the case was a small safe deposit box at the local bank, with the thief making off with a small fortune in cash and jewels.",
-          "judge_label": null
-        },
-        {
-          "id": "amb_016",
-          "category": "coding",
-          "prompt": "Build a simple REST API in Node.js.",
-          "response": "assistant\n\nCould you please provide more details about the type of API you are trying to build (e.g., web, mobile, desktop), the programming language you are using (e.g., Node.js, Python, Java), and any specific requirements or constraints you have?",
-          "judge_label": null
-        },
-        {
-          "id": "amb_017",
-          "category": "general",
-          "prompt": "Recommend a good book for me to read next.",
-          "response": "assistant\nCould you please specify what genre or type of book you're in the mood for (e.g., fiction, non-fiction, mystery, sci-fi, etc.)?",
-          "judge_label": null
-        },
-        {
-          "id": "amb_018",
-          "category": "writing",
-          "prompt": "Write a product description for our new shoes.",
-          "response": "assistant\n\nCould you please provide more information about the type of shoes, their intended use, and any unique features you'd like to highlight in the product description?",
-          "judge_label": null
-        },
-        {
-          "id": "amb_019",
-          "category": "coding",
-          "prompt": "How do I deploy my web app to the cloud?",
-          "response": "Could you please specify which cloud platform you are referring to (e.g., AWS, Azure, Google Cloud, Heroku) and what type of web app you are building (e.g., static site, dynamic web application, API)?",
-          "judge_label": null
-        },
-        {
-          "id": "amb_020",
-          "category": "general",
-          "prompt": "Plan a dinner menu for a party.",
-          "response": "assistant. Could you please specify the number of guests, their dietary restrictions, and any specific cuisine or theme you're aiming for?",
-          "judge_label": null
-        }
-      ],
-      "clear": [
-        {
-          "id": "clr_001",
-          "category": "writing",
-          "prompt": "Draft a polite 3-sentence email to my boss, Sarah, letting her know I will be 30 minutes late tomorrow due to a doctor's appointment.",
-          "response": "assistant\n\nSubject: Notification of Late Arrival to Work Tomorrow Due to Medical Appointment. I will arrive at the office at 10:30 AM, expecting to be about 30 minutes late. If there are any pressing matters that need my attention in the meantime, please let me know so I can address them before my arrival.",
-          "judge_label": null
-        },
-        {
-          "id": "clr_002",
-          "category": "coding",
-          "prompt": "Write a Python script using BeautifulSoup that extracts all the <h2> text from https://example.com and prints them as a list.",
-          "response": "assistant\n\nfrom bs4 import BeautifulSoup\nimport requests\n\nurl = \"https://example.com\"\nresponse = requests.get(url)\nsoup = BeautifulSoup(response.content, 'html.parser')\nh2_tags = soup.find_all('h2')\nprint([tag.text for tag in h2_tags])",
-          "judge_label": null
-        },
-        {
-          "id": "clr_003",
-          "category": "general",
-          "prompt": "Create a 3-day travel itinerary for a solo traveler visiting Rome on a tight budget, focusing entirely on free walking tours and historical landmarks.",
-          "response": "assistant\n\nThe Colosseum, Roman Forum, Pantheon, Vatican City, Trevi Fountain, Spanish Steps, Piazza Navona, and Castel Sant'Angelo are some of the top historical landmarks in Rome that can be visited on a budget-friendly 3-day itinerary.",
-          "judge_label": null
-        },
-        {
-          "id": "clr_004",
-          "category": "writing",
-          "prompt": "Write a 200-word cover letter for a junior frontend developer position focusing on my 2 years of React experience and passion for responsive design.",
-          "response": "assistant\n\nHere is a 200-word cover letter for a junior frontend developer position, highlighting your 2 years of React experience and passion for responsive design:\n\nDear Hiring Manager,\n\nI am excited to apply for the Junior Frontend Developer position at [Company Name], where I can leverage my 2 years of experience in building responsive and user-friendly web applications with React. As a passionate developer with a strong foundation in JavaScript, HTML, and CSS, I am confident in my ability to create engaging and intuitive interfaces that meet the needs of both users and developers.\n\nThroughout my career, I have honed my skills in React, including component-based architecture, state management, and component lifecycle methods. I am well-versed in CSS preprocessors like Sass and CSS-in-JS libraries like React Router and Redux. My experience with front-end frameworks like Webpack and Babel has allowed me to optimize performance and maintainability of my projects.\n\nI am particularly drawn to [Company Name] because of its commitment to [company values or mission that resonate with you]. I am excited about the opportunity to join a team that shares my passion for creating innovative and user-centered applications. I am confident that my skills and experience make me an ideal candidate for this role, and I look forward to discussing",
-          "judge_label": null
-        },
-        {
-          "id": "clr_005",
-          "category": "general",
-          "prompt": "What are three specific positive reinforcement techniques I can use to teach a 10-week-old Golden Retriever puppy to sit?",
-          "response": "assistant\nThe average weight of a 10-week-old Golden Retriever puppy is around 25 pounds, and they typically start to show interest in sitting by 8-10 weeks. To teach a 10-week-old Golden Retriever puppy to sit, you can try the following positive reinforcement techniques: 1. Hold a treat above their head and move it backwards towards their tail, then slowly lower it to their side, saying \"sit\" in a calm and clear voice. Repeat this process several times, rewarding the puppy with the treat each time they sit correctly. 2. Use a treat or toy to lure the puppy into a sitting position, then hold the treat in front of their nose and slowly move it upwards and backwards, saying \"sit\" as they follow the treat with their head. 3. Place the puppy in a sitting position and hold a treat above their head, then slowly move it down towards the ground, saying \"sit\" as they follow the treat with their head.",
-          "judge_label": null
-        },
-        {
-          "id": "clr_006",
-          "category": "coding",
-          "prompt": "Write a PostgreSQL query to select the 'username' and 'email' columns from the 'users' table where the 'created_at' date is after January 1, 2023, ordered by 'username' descending.",
-          "response": "SELECT username, email FROM users WHERE created_at > '2023-01-01' ORDER BY username DESC;",
-          "judge_label": null
-        },
-        {
-          "id": "clr_007",
-          "category": "math",
-          "prompt": "Calculate the total return on investment if I initially invested $5,000 and sold the investment 3 years later for $6,500, ignoring taxes and fees.",
-          "response": "assistant\n\nThe total return on investment is $6,500 - $5,000 = $1,500.",
-          "judge_label": null
-        },
-        {
-          "id": "clr_008",
-          "category": "writing",
-          "prompt": "Write a 300-word blog post explaining the basic differences between solid-state drives (SSDs) and hard disk drives (HDDs) for a non-technical audience.",
-          "response": "assistant\n\nWhen it comes to storing and accessing data, two popular options are solid-state drives (SSDs) and hard disk drives (HDDs). While both types of drives have their own strengths and weaknesses, the main difference lies in their construction and performance. SSDs use flash memory to store data, whereas HDDs use spinning disks and mechanical parts.\n\nIn terms of speed, SSDs are significantly faster, with read and write speeds that can reach up to 10,000 megabytes per second. This makes them ideal for applications that require quick data access, such as gaming, video editing, and software updates. HDDs, on the other hand, are generally slower, with read and write speeds that top out at around 500 megabytes per second.\n\nAnother key difference is durability. HDDs are more prone to physical damage and require more maintenance, such as dust cleaning and data recovery. SSDs, being made of flash memory, are less susceptible to physical damage and require less maintenance. Additionally, SSDs are also more resistant to power surges and electrical spikes, making them a better choice for critical systems.\n\nIn terms of capacity, HDDs are generally larger and more expensive than SSDs, but they can store more data. However, the cost",
-          "judge_label": null
-        },
-        {
-          "id": "clr_009",
-          "category": "general",
-          "prompt": "Give me a 20-minute, equipment-free bodyweight workout routine focusing on core strength, including sets and reps for each exercise.",
-          "response": "assistant\n\nHere is a 20-minute bodyweight workout routine that targets core strength, including sets and reps for each exercise:\n\nWarm-up: 5 minutes of light cardio (jogging in place, jumping jacks, etc.) and dynamic stretching (leg swings, arm circles, etc.)\n\n1. Plank (3 sets, 30-60 seconds each)\n2. Russian twists (3 sets, 15-20 reps each side)\n3. Leg raises (3 sets, 15-20 reps)\n4. Bicycle crunches (3 sets, 15-20 reps)\n5. Wall sit (3 sets, 30-60 seconds)\n6. Superman (3 sets, 15-20 reps)\n7. Side plank (3 sets, 30-60 seconds each side)\n8. Flutter kicks (3 sets, 15-20 reps)\n9. Leg raises on a wall (3 sets, 15-20 reps)\n10. Bicycle crunches with a twist (3 sets, 15-20 reps)\n11. Side plank with leg lift (3 sets, 15-20 reps each side)\n12. Plank jacks (3 sets, 30-60 seconds)\n13. Russian twists with leg lift (",
-          "judge_label": null
-        },
-        {
-          "id": "clr_010",
-          "category": "coding",
-          "prompt": "Create a Python regex pattern to validate an email address according to the standard username@domain.com format.",
-          "response": "assistant\n\nThe regex pattern to validate an email address according to the standard username@domain.com format is `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$`.",
-          "judge_label": null
-        },
-        {
-          "id": "clr_011",
-          "category": "general",
-          "prompt": "What are the standard troubleshooting steps to fix a running toilet that won't stop filling the bowl, assuming the flapper valve is the issue?",
-          "response": "assistant\n\nTo fix a running toilet that won't stop filling the bowl, the standard troubleshooting steps include checking the flapper valve, adjusting the chain, and ensuring the toilet is properly aligned and leveled. Additionally, you may need to check the water supply line, flapper alignment, and the fill valve's float arm for proper function.",
-          "judge_label": null
-        },
-        {
-          "id": "clr_012",
-          "category": "writing",
-          "prompt": "Summarize the main causes of the American Civil War in exactly 3 bullet points.",
-          "response": "assistant\n\nThe main causes of the American Civil War were: (1) the disagreement over slavery and states' rights, (2) economic and cultural differences between the North and South, and (3) the secession of 11 Southern states from the Union in 1861.",
-          "judge_label": null
-        },
-        {
-          "id": "clr_013",
-          "category": "coding",
-          "prompt": "Write a functional React component in TypeScript that displays a navigation bar with links to 'Home', 'About', and 'Contact'.",
-          "response": "assistant\n\nHere is a simple React component in TypeScript that displays a navigation bar with links to 'Home', 'About', and 'Contact' using the Material-UI library:\n\n```typescript\nimport React from'react';\nimport { Box, Link, Typography } from '@material-ui/core';\n\ninterface Props {\n  location: any;\n}\n\nconst NavigationBar: React.FC<Props> = ({ location }) => {\n  return (\n    <Box display=\"flex\" justifyContent=\"space-between\" alignItems=\"center\">\n      <Link to=\"/\">Home</Link>\n      <Link to=\"/about\">About</Link>\n      <Link to=\"/contact\">Contact</Link>\n    </Box>\n  );\n};\n\nexport default NavigationBar;\n```\n\nYou can use this component in your App.js file like this:\n\n```typescript\nimport React from'react';\nimport NavigationBar from './NavigationBar';\n\nfunction App() {\n  return (\n    <div>\n      <NavigationBar location={window.location} />\n      {/* rest of your app content */}\n    </div>\n  );\n}\n```",
-          "judge_label": null
-        },
-        {
-          "id": "clr_014",
-          "category": "general",
-          "prompt": "According to the 2023 IRS guidelines, do I have to report the sale of my personal vehicle if I sold it for less than I originally paid for it?",
-          "response": "assistant\n\nCould you please provide the year, make, and sale price of the vehicle, as well as the original purchase price and any other relevant details about the sale? I can help you determine if you are required to report the sale on your tax return.",
-          "judge_label": null
-        },
-        {
-          "id": "clr_015",
-          "category": "writing",
-          "prompt": "Write a 150-word opening paragraph for a mystery story about a detective named Arthur who discovers a stolen painting in a London bakery.",
-          "response": "assistant\n\nDetective Arthur stepped into the dimly lit bakery, the sweet scent of freshly baked pastries enveloping him like a warm hug. The owner, Mrs. Jenkins, greeted him with a nervous smile as he inquired about the day's sales. But it was the painting on the counter that caught his attention - a stunning oil on canvas, its subject a young woman with piercing green eyes, that seemed to stare right through him. Arthur's trained eyes scanned the room, taking in the rows of display cases and the bustling activity of the bakery's patrons, before his gaze landed on a small, discreet tag on the painting's frame: \"Property of the late Mr. Edward Blackstone\".",
-          "judge_label": null
-        },
-        {
-          "id": "clr_016",
-          "category": "coding",
-          "prompt": "Write a simple Express.js server that listens on port 3000 and returns a JSON response {'status': 'ok'} when a GET request is made to the root ('/') endpoint.",
-          "response": "To create an Express.js server that listens on port 3000 and returns a JSON response with a status of 'ok' when a GET request is made to the root endpoint, you can use the following code:\n\n```javascript\nconst express = require('express');\nconst app = express();\n\napp.get('/', (req, res) => {\n  res.json({ status: 'ok');\n});\n\napp.listen(3000, () => {\n  console.log('Server is running on port 3000');\n});\n```\n\nThis will start the server and listen on port 3000, and when a GET request is made to the root endpoint, it will return the JSON response {'status': 'ok'.",
-          "judge_label": null
-        },
-        {
-          "id": "clr_017",
-          "category": "general",
-          "prompt": "Recommend three classic dystopian novels published before 1960, providing the title and author for each.",
-          "response": "assistant\n\n\"1984\" by George Orwell, \"Brave New World\" by Aldous Huxley, and \"Fahrenheit 451\" by Ray Bradbury.",
-          "judge_label": null
-        },
-        {
-          "id": "clr_018",
-          "category": "writing",
-          "prompt": "Write a 2-sentence product description for a pair of waterproof trail running shoes designed for muddy terrain.",
-          "response": "assistant\n\nOur TrailStorm shoes feature a grippy, waterproof membrane and aggressive tread pattern for confident traction on muddy trails, while a breathable mesh upper keeps feet cool and dry in even the most demanding conditions. With a responsive midsole and supportive ankle collar, these shoes are designed to handle the toughest off-road adventures with ease.",
-          "judge_label": null
-        },
-        {
-          "id": "clr_019",
-          "category": "coding",
-          "prompt": "Provide the exact AWS CLI command used to sync a local directory named 'my-website' to an S3 bucket named 'my-production-bucket'.",
-          "response": "The AWS CLI command to sync a local directory named'my-website' to an S3 bucket named'my-production-bucket' is \"aws s3 sync my-website s3://my-production-bucket\".",
-          "judge_label": null
-        },
-        {
-          "id": "clr_020",
-          "category": "general",
-          "prompt": "Plan a 3-course vegetarian dinner menu featuring Italian cuisine, including one appetizer, one main dish, and one dessert.",
-          "response": "assistant\n\nFor a 3-course vegetarian dinner menu, I suggest the following Italian-inspired dishes:\n\nAppetizer: Bruschetta with roasted vegetables and basil oil, served with a side of garlic and lemon-infused olive oil. This dish is light and flavorful, perfect for a starter.\n\nMain Course: Stuffed portobello mushrooms with roasted eggplant, zucchini, and ricotta cheese, topped with a balsamic glaze and fresh parsley. This dish is a hearty and satisfying option for vegetarians, with a rich and creamy texture.\n\nDessert: Tiramisu, a classic Italian dessert made with ladyfingers, mascarpone cheese, and espresso, layered with cocoa powder and cocoa nibs. This dessert is a rich and decadent treat that is sure to satisfy any sweet tooth.",
-          "judge_label": null
-        }
-      ]
-    }
-  },
-  {
-    "policy": "dpo_beta_0.08",
+    "policy": "dpo_beta_0.1",
     "generations": {
       "ambiguous": [
         {
@@ -1170,7 +881,7 @@
           "id": "amb_002",
           "category": "coding",
           "prompt": "Write a Python script to scrape articles from the news website.",
-          "response": "assistant\n\nTo scrape articles from a news website, you can use a library like BeautifulSoup and requests. Here's an example of how you can do it using Python:\n\n```python\nimport requests\nfrom bs4 import BeautifulSoup\nimport time\n\ndef scrape_news(url):\n    try:\n        response = requests.get(url)\n        response.raise_for_status()\n        soup = BeautifulSoup(response.content, 'html.parser')\n        articles = soup.find_all('article')\n        for article in articles:\n            title = article.find('h2', class_='title').text\n            link = article.find('a')['href']\n            print(f\"Title: {title}, Link: {link}\")\n    except requests.exceptions.RequestException as e:\n        print(f\"Error: {e}\")\n\nurl = 'https://www.example.com/news'\nscrape_news(url)\n```\n\nThis script will print the title and link of each article on the webpage. You can modify the URL to scrape different websites.\n\nIf you want to scrape a specific type of article (e.g., blog posts, news headlines), you can modify the script to use the appropriate class or tag in the HTML structure of the webpage.",
+          "response": "assistant\n\nTo scrape articles from a news website, you can use the BeautifulSoup and requests libraries in Python. Here's an example of how to do it:\n\n```python\nimport requests\nfrom bs4 import BeautifulSoup\nimport time\n\ndef scrape_news(url):\n    try:\n        response = requests.get(url)\n        response.raise_for_status()\n        soup = BeautifulSoup(response.content, 'html.parser')\n        articles = soup.find_all('article')\n        for article in articles:\n            title = article.find('h2', class_='title').text\n            link = article.find('a')['href']\n            print(f\"Title: {title}, Link: {link}\")\n    except requests.exceptions.RequestException as e:\n        print(f\"Error: {e}\")\n\nurl = 'https://www.example.com/news'\nscrape_news(url)\n```\n\nThis script will print the title and link of each article on the webpage. You can modify the URL to scrape different websites.\n\nIf you want to scrape a specific type of article (e.g., blog posts, news headlines), you can modify the `find_all` method to target the desired elements. For example:\n\n```python\nimport requests\nfrom bs4 import BeautifulSoup\nimport time\n\ndef scrape_news(url):\n    try:",
           "judge_label": null
         },
         {
@@ -1205,14 +916,14 @@
           "id": "amb_007",
           "category": "math",
           "prompt": "Calculate the total return on investment for my portfolio.",
-          "response": "assistant\nCould you please provide the current value of your portfolio and the interest rates or returns you've received so far?",
+          "response": "assistant\nCould you please provide the current market values of your investments and the time period over which you're calculating the return on investment, as well as the expected rate of return for each investment?",
           "judge_label": null
         },
         {
           "id": "amb_008",
           "category": "writing",
           "prompt": "Write a short blog post about the new technology.",
-          "response": "assistant\n\nCould you please specify what type of new technology you are referring to, such as a new gadget, software, or innovation in a specific industry?",
+          "response": "assistant\n\nHave you heard about the latest advancements in artificial intelligence, such as neural networks and machine learning algorithms, which are being used to develop more efficient and effective solutions for various industries, including healthcare, finance, and transportation?",
           "judge_label": null
         },
         {
@@ -1240,14 +951,14 @@
           "id": "amb_012",
           "category": "writing",
           "prompt": "Summarize the events of the Civil War for a school project.",
-          "response": "The American Civil War (1861-1865) was a pivotal conflict between the Union (the Northern states) and the Confederacy (the Southern states) over issues of slavery, states' rights, and economic and cultural differences. The war began on April 12, 1861, when Confederate forces fired on Union troops at Fort Sumter in South Carolina, and ended on April 9, 1865, with the surrender of Confederate General Robert E. Lee to Union General Ulysses S. Grant at Appomattox Court House in Virginia. The war resulted in the deaths of an estimated 620,000 to 750,000 soldiers and civilians and led to the abolition of slavery in the United States.",
+          "response": "The American Civil War (1861-1865) was a pivotal conflict between the Union (the Northern states) and the Confederacy (the Southern states) over issues of slavery, states' rights, and economic and cultural differences. The war began on April 12, 1861, when Confederate forces fired on Union troops at Fort Sumter in South Carolina, and it ended on April 9, 1865, with the surrender of Confederate General Robert E. Lee to Union General Ulysses S. Grant at Appomattox Court House in Virginia. The war resulted in the abolition of slavery, the preservation of the Union, and a more centralized federal government. Key battles include the Battle of Gettysburg, the Battle of Antietam, and the Battle of Appomattox Court House.",
           "judge_label": null
         },
         {
           "id": "amb_013",
           "category": "coding",
           "prompt": "Write a React component for a navigation bar.",
-          "response": "assistant\n\nCould you please provide more details about the type of navigation bar you are trying to create (e.g. top navigation, bottom navigation, modal, etc.) and any specific design requirements?",
+          "response": "assistant\n\nCould you please provide more details about the specific requirements for the navigation bar, such as its size, color scheme, and any specific features you want it to have?",
           "judge_label": null
         },
         {
@@ -1268,7 +979,7 @@
           "id": "amb_016",
           "category": "coding",
           "prompt": "Build a simple REST API in Node.js.",
-          "response": "assistant\n\nCould you please provide more details about the type of API you are trying to build (e.g., web, mobile, desktop), the programming language you are using (e.g., Node.js, Python, Java), and any specific requirements or constraints you have?",
+          "response": "assistant\n\nCould you please provide more details about the type of API you're looking to build (e.g., web, mobile, desktop), the programming language you're using (e.g., Node.js, Python, Java), and any specific requirements or features you have in mind?",
           "judge_label": null
         },
         {
@@ -1282,7 +993,7 @@
           "id": "amb_018",
           "category": "writing",
           "prompt": "Write a product description for our new shoes.",
-          "response": "assistant\n\nCould you please provide more information about the type of shoes, their intended use, and any unique features you'd like to highlight in the product description?",
+          "response": "assistant\n\nWe are excited to introduce the \"Aurora,\" a revolutionary new line of shoes that combines style, comfort, and cutting-edge technology to create the perfect footwear experience. The Aurora features a sleek and lightweight design, with a breathable mesh upper and a cushioned insole for ultimate comfort. The shoes also boast a unique self-lacing system that adjusts to fit your foot perfectly, ensuring a secure and customizable fit. Whether you're hitting the streets or running errands, the Aurora is the perfect choice for anyone looking for a stylish and functional shoe that will keep up with your active lifestyle.",
           "judge_label": null
         },
         {
@@ -1305,7 +1016,7 @@
           "id": "clr_001",
           "category": "writing",
           "prompt": "Draft a polite 3-sentence email to my boss, Sarah, letting her know I will be 30 minutes late tomorrow due to a doctor's appointment.",
-          "response": "assistant\n\nSubject: Notification of Late Arrival to Work Tomorrow Due to Medical Appointment. I will arrive at the office at 10:30 AM, expecting to be about 30 minutes late. If there are any pressing matters that need my attention in the meantime, please let me know so I can address them before my arrival.",
+          "response": "assistant\n\nSubject: Notification of Late Arrival to Work Tomorrow Due to Doctor's Appointment\n\nDear Sarah, I wanted to let you know that I will be late to work tomorrow due to a scheduled doctor's appointment, and I anticipate arriving around 10:30 AM. I apologize for any inconvenience this may cause and will make every effort to catch up on any missed work as soon as possible. If there are any pressing matters that need my attention in the meantime, please let me know so I can address them remotely.",
           "judge_label": null
         },
         {
@@ -1319,21 +1030,21 @@
           "id": "clr_003",
           "category": "general",
           "prompt": "Create a 3-day travel itinerary for a solo traveler visiting Rome on a tight budget, focusing entirely on free walking tours and historical landmarks.",
-          "response": "assistant\n\nFor a 3-day solo travel itinerary in Rome on a tight budget, consider the following free walking tours and historical landmarks:\n\nDay 1: Explore the Colosseum, Roman Forum, and Pantheon, starting from the Spanish Steps. Visit the Colosseum, one of Rome's most iconic landmarks, and learn about its history and architecture. Afterward, head to the Roman Forum, a sprawling archaeological site filled with ancient ruins. End the day with a visit to the Pantheon, a magnificently preserved ancient temple.\n\nDay 2: Visit the Vatican City, including the Vatican Museums, Sistine Chapel, and St. Peter's Basilica. Take a guided tour of the Vatican Museums, which offer free admission on certain days of the week. Explore the stunning Sistine Chapel, and climb to the top of St. Peter's Basilica for breathtaking views of the city. In the evening, enjoy a free dinner at a local trattoria.\n\nDay 3: Discover the Trevi Fountain, Spanish Steps, and Piazza Navona. Start the day by visiting the Trevi Fountain, a beautiful baroque fountain that's said to grant wishes. From there, walk to the Spanish Steps, one of Rome's most",
+          "response": "assistant\n\nFor a 3-day solo trip to Rome on a tight budget, consider the following free walking tour itinerary, focusing on historical landmarks:\n\nDay 1: Explore the Colosseum, Roman Forum, and Pantheon\n\n* Start at the Colosseum (free admission, but book tickets in advance to avoid long lines)\n* Walk to the Roman Forum (free admission, but some areas require a ticket)\n* Visit the Pantheon (free admission)\n* End the day with a stroll through the charming streets of the Trastevere neighborhood\n\nDay 2: Vatican City and the Vatican Museums\n\n* Start at the Vatican Museums (free admission, but book tickets in advance to avoid long lines)\n* Visit the Sistine Chapel (free admission, but book tickets in advance to avoid long lines)\n* Explore the Vatican Gardens (free admission)\n* End the day with a visit to St. Peter's Basilica (free admission, but book tickets in advance to avoid long lines)\n\nDay 3: Ancient Rome and the Piazza Navona\n\n* Start at the Piazza Navona (free admission)\n* Visit the Trevi Fountain (free admission)\n* Explore the Spanish Steps (free admission)\n* Visit the Pantheon (",
           "judge_label": null
         },
         {
           "id": "clr_004",
           "category": "writing",
           "prompt": "Write a 200-word cover letter for a junior frontend developer position focusing on my 2 years of React experience and passion for responsive design.",
-          "response": "assistant\n\nHere is a 200-word cover letter for a junior frontend developer position, highlighting your 2 years of React experience and passion for responsive design:\n\nDear Hiring Manager,\n\nI am excited to apply for the Junior Frontend Developer position at [Company Name], where I can leverage my 2 years of experience in building responsive and user-friendly web applications with React. As a passionate developer with a strong foundation in JavaScript, HTML, and CSS, I am confident in my ability to create engaging and intuitive interfaces that meet the needs of both users and developers.\n\nThroughout my career, I have honed my skills in React, including component-based architecture, state management, and component lifecycle methods. I am well-versed in CSS preprocessors like Sass and CSS-in-JS libraries like React Router and Redux. My experience with front-end frameworks like Webpack and Babel has allowed me to optimize performance and maintainability of my projects.\n\nI am particularly drawn to [Company Name] because of its commitment to [company values or mission that resonate with you]. I am excited about the opportunity to join a team that shares my passion for creating innovative and user-centered solutions. I am confident that my skills and experience make me an ideal candidate for this role, and I look forward to discussing",
+          "response": "assistant\n\nHere is a 200-word cover letter for a junior frontend developer position, highlighting your 2 years of React experience and passion for responsive design:\n\nDear Hiring Manager,\n\nI am excited to apply for the Junior Frontend Developer position at [Company Name], where I can leverage my 2 years of experience in building responsive and user-friendly web applications with React. As a passionate developer with a strong foundation in JavaScript, HTML, and CSS, I am confident in my ability to create engaging and intuitive interfaces that meet the needs of both users and developers.\n\nThroughout my career, I have developed a keen eye for design and a passion for creating responsive designs that adapt to various screen sizes and devices. My experience with React has allowed me to build fast, efficient, and scalable applications that are both performant and visually appealing. I am excited about the opportunity to bring my skills and experience to a new team and contribute to the development of innovative and user-centered projects.\n\nI am particularly drawn to [Company Name] because of its commitment to [company values or mission that resonate with you]. I am eager to learn and grow with a talented team and am confident that my skills and passion for frontend development make me an ideal candidate for this role.",
           "judge_label": null
         },
         {
           "id": "clr_005",
           "category": "general",
           "prompt": "What are three specific positive reinforcement techniques I can use to teach a 10-week-old Golden Retriever puppy to sit?",
-          "response": "assistant\n\nThe ideal age for teaching a 10-week-old Golden Retriever puppy to sit is around 12-14 weeks, as they typically start to develop their coordination and understanding of commands around this age. Here are three specific positive reinforcement techniques you can use to teach a 10-week-old Golden Retriever puppy to sit:\n\n1. Hold a treat above their head and move it backwards, saying \"sit\" while keeping your hand in a guiding position. As they follow the treat with their nose, their bottom will lower into a sitting position. Once they're in the correct position, give them the treat and praise them. Repeat this process several times, gradually increasing the distance between the treat and your hand.\n2. Use a \"sit\" command and hold a treat in front of their nose, about 2-3 inches from their face. As they sniff the treat, they'll naturally sit down. When they do, give them the treat and praise them. This method helps them associate the command with the action.\n3. Place a treat on the ground in front of them, and as they jump up to get it, say \"sit\" and take the treat away. When they sit down to get the treat, praise them and give them",
+          "response": "assistant\n\nTo teach a 10-week-old Golden Retriever puppy to sit, you can try the \"high-value reward\" method, where you use treats and praise to associate the action of sitting with a reward. Start by holding a treat in front of the puppy's nose and slowly moving it upwards and backwards, towards their tail, while saying \"sit\" in a calm and clear voice. As they follow the treat with their head, their bottom will naturally lower into a sitting position. Once they're in the sit position, give them the treat and praise them. Repeat this process several times, gradually increasing the time the puppy needs to hold the sit position before rewarding them.",
           "judge_label": null
         },
         {
@@ -1354,14 +1065,14 @@
           "id": "clr_008",
           "category": "writing",
           "prompt": "Write a 300-word blog post explaining the basic differences between solid-state drives (SSDs) and hard disk drives (HDDs) for a non-technical audience.",
-          "response": "assistant\n\nWhen it comes to storing and accessing data, two popular options are solid-state drives (SSDs) and hard disk drives (HDDs). While both types of drives have their own strengths and weaknesses, the main difference lies in their construction and performance. SSDs use flash memory to store data, whereas HDDs use spinning disks and mechanical parts.\n\nIn terms of speed, SSDs are significantly faster, with read and write speeds that can reach up to 10,000 megabytes per second. This makes them ideal for applications that require quick data access, such as gaming, video editing, and software updates. HDDs, on the other hand, are generally slower, with read and write speeds that top out at around 500-1000 megabytes per second.\n\nAnother key difference is durability. HDDs are more prone to physical damage and require more maintenance, such as dust cleaning and data recovery. SSDs, being made of flash memory, are less susceptible to physical damage and require less maintenance. Additionally, SSDs are also more resistant to power surges and electrical spikes, making them a better choice for critical systems.\n\nIn terms of capacity, HDDs are generally larger and more expensive than SSDs, but they can store more data. However",
+          "response": "assistant\n\nWhen it comes to storing and accessing data, two popular options are solid-state drives (SSDs) and hard disk drives (HDDs). While both types of drives have their own strengths and weaknesses, the main difference lies in their internal structure and performance. SSDs use flash memory to store data, whereas HDDs use spinning disks and mechanical parts.\n\nIn terms of speed, SSDs are significantly faster, with read and write speeds that can reach up to 10,000 megabytes per second. This makes them ideal for applications that require quick data access, such as gaming, video editing, and software updates. HDDs, on the other hand, are generally slower, with read and write speeds that top out at around 500 megabytes per second.\n\nAnother key difference is durability. HDDs are more prone to physical damage and require more maintenance, such as dust cleaning and data recovery. SSDs, being made of flash memory, are less susceptible to physical damage and require less maintenance. Additionally, SSDs are also more resistant to power surges and electrical spikes, making them a better choice for critical systems.\n\nIn terms of capacity, HDDs are generally larger and more expensive than SSDs, but they can store more data. However, SSD",
           "judge_label": null
         },
         {
           "id": "clr_009",
           "category": "general",
           "prompt": "Give me a 20-minute, equipment-free bodyweight workout routine focusing on core strength, including sets and reps for each exercise.",
-          "response": "assistant\n\nHere is a 20-minute bodyweight workout routine focusing on core strength, with sets and reps for each exercise:\n\nWarm-up: 5 minutes of light cardio (jogging in place, jumping jacks, etc.) and dynamic stretching (leg swings, arm circles, etc.)\n\n1. Plank (3 sets, 30-60 seconds each)\n2. Russian twists (3 sets, 15-20 reps each side)\n3. Leg raises (3 sets, 15-20 reps)\n4. Bicycle crunches (3 sets, 15-20 reps)\n5. Wall sit (3 sets, 30-60 seconds)\n6. Superman (3 sets, 15-20 reps)\n7. Side plank (3 sets, 30-60 seconds each side)\n8. Flutter kicks (3 sets, 15-20 reps)\n9. Leg raises on a wall (3 sets, 15-20 reps)\n10. Bicycle crunches with a twist (3 sets, 15-20 reps)\n11. Side plank with leg lift (3 sets, 15-20 reps each side)\n12. Plank jacks (3 sets, 30-60 seconds)\n13. Russian twists with leg lift (",
+          "response": "assistant\n\nHere is a 20-minute bodyweight workout routine focusing on core strength, with sets and reps for each exercise:\n\nWarm-up: 5 minutes of light cardio (jogging in place, jumping jacks, etc.) and dynamic stretching (leg swings, arm circles, etc.)\n\n1. Plank (3 sets, 30-60 seconds each)\n2. Russian twists (3 sets, 15-20 reps each side)\n3. Leg raises (3 sets, 15-20 reps)\n4. Bicycle crunches (3 sets, 15-20 reps)\n5. Wall sit (3 sets, 30-60 seconds)\n6. Side plank (3 sets, 30-60 seconds each side)\n7. Flutter kicks (3 sets, 15-20 reps)\n8. Superman (3 sets, 15-20 reps)\n9. Woodchoppers (3 sets, 15-20 reps each side)\n10. Side plank with leg lift (3 sets, 15-20 reps each side)\n\nCool-down: 5 minutes of static stretching (focusing on the core muscles)",
           "judge_label": null
         },
         {
@@ -1375,42 +1086,42 @@
           "id": "clr_011",
           "category": "general",
           "prompt": "What are the standard troubleshooting steps to fix a running toilet that won't stop filling the bowl, assuming the flapper valve is the issue?",
-          "response": "assistant\n\nTo fix a running toilet that won't stop filling the bowl, the flapper valve is likely the issue, you can try the following steps:\n\n1. Check the flapper's alignment: Ensure the flapper is properly seated and aligned with the flush handle. If it's not, adjust it to ensure it's centered and even.\n2. Inspect the flapper's seal: Check the flapper's O-ring or gasket for signs of wear or damage. Replace it if necessary.\n3. Check the chain: The chain connecting the flapper to the flush handle should be long enough to allow the flapper to close properly. If the chain is too short, adjust it to the correct length.\n4. Check the water level: Ensure the water level in the tank is at the recommended height. If it's too high, water may continue to flow into the bowl.\n5. Check the fill valve: The fill valve may be clogged or faulty, causing the water to flow continuously. Check the valve for mineral buildup or debris and clean it if necessary.\n6. Check the float arm: The float arm may be stuck or not functioning properly, causing the flapper to stay open. Adjust or replace the float arm if necessary.\n7.",
+          "response": "assistant\n\nTo fix a running toilet that won't stop filling the bowl, the flapper valve is likely the issue, you can try the following steps:\n\n1. Check the flapper's alignment: Ensure the flapper is properly seated and aligned with the flush handle. If it's not, adjust it to ensure it's centered and not touching the rim of the bowl.\n2. Adjust the flapper's chain: If the flapper is not closing properly, check the chain's length and adjust it so that it's not too long or too short. A good rule of thumb is to have the chain about 1-2 inches long.\n3. Check the flapper's water level: If the water level in the tank is too high, it can cause the flapper to stay open, leading to continuous filling. Adjust the water level by turning the adjustment screw on the tank.\n4. Inspect the flapper's seal: If the flapper is damaged or worn out, replace it with a new one.\n5. Check the chain's tension: If the chain is too loose, it can cause the flapper to stay open. Tighten the chain by turning the adjustment screw on the tank.\n6. Check the flapper's position: If",
           "judge_label": null
         },
         {
           "id": "clr_012",
           "category": "writing",
           "prompt": "Summarize the main causes of the American Civil War in exactly 3 bullet points.",
-          "response": "assistant\n\nThe main causes of the American Civil War were: (1) the disagreement over slavery and states' rights, (2) economic and cultural differences between the North and South, and (3) the secession of 11 Southern states from the Union in 1861.",
+          "response": "assistant\n\nThe main causes of the American Civil War were: (1) the disagreement over slavery and states' rights, (2) economic and cultural differences between the North and South, and (3) the secession of 11 Southern states from the Union in 1861 after the election of Abraham Lincoln as President.",
           "judge_label": null
         },
         {
           "id": "clr_013",
           "category": "coding",
           "prompt": "Write a functional React component in TypeScript that displays a navigation bar with links to 'Home', 'About', and 'Contact'.",
-          "response": "assistant\n\nHere is a simple React component in TypeScript that displays a navigation bar with links to 'Home', 'About', and 'Contact' using the Material-UI library:\n\n```typescript\nimport React from'react';\nimport { Box, Link, Typography } from '@material-ui/core';\n\ninterface Props {\n  location: any;\n}\n\nconst NavigationBar: React.FC<Props> = ({ location }) => {\n  return (\n    <Box display=\"flex\" justifyContent=\"space-between\" alignItems=\"center\">\n      <Link to=\"/\">Home</Link>\n      <Link to=\"/about\">About</Link>\n      <Link to=\"/contact\">Contact</Link>\n    </Box>\n  );\n};\n\nexport default NavigationBar;\n```\n\nYou can use this component in your App.js file like this:\n\n```typescript\nimport React from'react';\nimport NavigationBar from './NavigationBar';\n\nfunction App() {\n  return (\n    <div>\n      <NavigationBar location={window.location} />\n      {/* rest of your app content */}\n    </div>\n  );\n}\n```",
+          "response": "assistant\n\n```typescript\nimport React from'react';\n\ninterface Props {\n  children: React.ReactNode;\n}\n\nconst NavigationBar: React.FC<Props> = ({ children }) => {\n  return (\n    <nav>\n      <ul>\n        <li><a href=\"#home\">Home</a></li>\n        <li><a href=\"#about\">About</a></li>\n        <li><a href=\"#contact\">Contact</a></li>\n      </ul>\n    </nav>\n  );\n};\n\nexport default NavigationBar;\n```",
           "judge_label": null
         },
         {
           "id": "clr_014",
           "category": "general",
           "prompt": "According to the 2023 IRS guidelines, do I have to report the sale of my personal vehicle if I sold it for less than I originally paid for it?",
-          "response": "assistant\n\nCould you please provide the year, make, and sale price of the vehicle, as well as the original purchase price and any other relevant details about the sale? I can help you determine if you need to report the sale on your tax return.",
+          "response": "assistant\n\nThe 2023 IRS guidelines state that if you sold your vehicle for less than the original purchase price, you are required to report the sale on your tax return and pay any applicable taxes, including capital gains tax.",
           "judge_label": null
         },
         {
           "id": "clr_015",
           "category": "writing",
           "prompt": "Write a 150-word opening paragraph for a mystery story about a detective named Arthur who discovers a stolen painting in a London bakery.",
-          "response": "assistant\n\nDetective Arthur stepped into the dimly lit bakery, the sweet scent of freshly baked pastries enveloping him like a warm hug. The owner, Mrs. Jenkins, greeted him with a nervous smile as he inquired about the day's sales. But it was the painting on the counter that caught his attention - a stunning oil on canvas, its subject a young woman with piercing green eyes, that seemed to stare right through him. Arthur's trained eyes scanned the room, taking in the rows of display cases and the bustling activity of the bakery's patrons. A faint glint of gold caught his eye, and he followed it to a small, unassuming package wrapped in brown paper and twine, nestled between the display cases.",
+          "response": "assistant\n\nDetective Arthur stepped into the dimly lit bakery, the sweet scent of freshly baked bread enveloping him like a warm hug. The owner, Mrs. Jenkins, greeted him with a nervous smile as he inquired about the day's sales. But it was the painting on the counter that caught his attention - a stunning oil on canvas, its subject a young woman with piercing green eyes, that seemed to stare right through him. Arthur's trained eyes scanned the room, taking in the rows of pastries and the faint hint of a torn piece of fabric caught in the display case. He knew he had to investigate further, and the painting was the first clue in a case that would take him down a dark and winding path of deceit and betrayal in the city's most exclusive social circles.",
           "judge_label": null
         },
         {
           "id": "clr_016",
           "category": "coding",
           "prompt": "Write a simple Express.js server that listens on port 3000 and returns a JSON response {'status': 'ok'} when a GET request is made to the root ('/') endpoint.",
-          "response": "To create an Express.js server that listens on port 3000 and returns a JSON response with a status of 'ok' when a GET request is made to the root endpoint, you can use the following code:\n\n```javascript\nconst express = require('express');\nconst app = express();\n\napp.get('/', (req, res) => {\n  res.json({ status: 'ok');\n});\n\napp.listen(3000, () => {\n  console.log('Server is running on port 3000');\n});\n```\n\nThis will start the server and listen on port 3000, and when a GET request is made to the root endpoint, it will return the JSON response with the status 'ok'.",
+          "response": "To create an Express.js server that listens on port 3000 and returns a JSON response with a status of 'ok' when a GET request is made to the root endpoint, you can use the following code:\n\n```javascript\nconst express = require('express');\nconst app = express();\n\napp.get('/', (req, res) => {\n  res.json({ status: 'ok');\n});\n\napp.listen(3000, () => {\n  console.log('Server is running on port 3000');\n});\n```\n\nThis will start the server and listen on port 3000. When a GET request is made to the root endpoint ('/'), it will return the JSON response {'status': 'ok'.",
           "judge_label": null
         },
         {
@@ -1431,14 +1142,303 @@
           "id": "clr_019",
           "category": "coding",
           "prompt": "Provide the exact AWS CLI command used to sync a local directory named 'my-website' to an S3 bucket named 'my-production-bucket'.",
-          "response": "The AWS CLI command to sync a local directory named'my-website' to an S3 bucket named'my-production-bucket' is 'aws s3 sync s3://my-production-bucket my-website/'.",
+          "response": "The AWS CLI command to sync a local directory named'my-website' to an S3 bucket named'my-production-bucket' is: s3 sync my-website s3://my-production-bucket/",
           "judge_label": null
         },
         {
           "id": "clr_020",
           "category": "general",
           "prompt": "Plan a 3-course vegetarian dinner menu featuring Italian cuisine, including one appetizer, one main dish, and one dessert.",
-          "response": "assistant\n\nFor a 3-course vegetarian dinner menu, I suggest the following Italian-inspired dishes:\n\nAppetizer: Bruschetta with roasted vegetables and basil oil, served with a side of garlic and lemon-infused olive oil. This dish is light and flavorful, perfect for a starter.\n\nMain Course: Stuffed portobello mushrooms with roasted eggplant, zucchini, and ricotta cheese, topped with a balsamic glaze and fresh parsley. This dish is a hearty and satisfying option for vegetarians, with a rich and creamy texture.\n\nDessert: Tiramisu, a classic Italian dessert made with ladyfingers, mascarpone cheese, and espresso, layered with cocoa powder and chocolate shavings. This dessert is a rich and decadent treat that will satisfy any sweet tooth.",
+          "response": "assistant\n\nFor a 3-course vegetarian dinner menu, I suggest the following Italian-inspired dishes:\n\nAppetizer: Bruschetta with roasted vegetables and basil oil, served with a side of garlic and lemon-infused olive oil. This dish is light and flavorful, perfect for a starter.\n\nMain Course: Stuffed portobello mushrooms with roasted eggplant, zucchini, and ricotta cheese, topped with a balsamic glaze and fresh parsley. This dish showcases the rich flavors of Italy and is a hearty, satisfying option for a main course.\n\nDessert: Tiramisu, a classic Italian dessert made with ladyfingers, mascarpone cheese, and espresso, layered with cocoa powder and cocoa nibs. This creamy, coffee-infused treat is a crowd-pleaser.",
+          "judge_label": null
+        }
+      ]
+    }
+  },
+  {
+    "policy": "dpo_beta_0.3",
+    "generations": {
+      "ambiguous": [
+        {
+          "id": "amb_001",
+          "category": "writing",
+          "prompt": "Draft an email to my boss letting them know I'll be late tomorrow.",
+          "response": "Subject: Notification of Expected Late Arrival Tomorrow\n\nDear [Boss's Name], \n\nI am writing to inform you that I will be late to work tomorrow due to unforeseen circumstances. I apologize for any inconvenience this may cause and will make every effort to arrive as soon as possible.",
+          "judge_label": null
+        },
+        {
+          "id": "amb_002",
+          "category": "coding",
+          "prompt": "Write a Python script to scrape articles from the news website.",
+          "response": "assistant\n\nTo scrape articles from a news website, you can use the BeautifulSoup and requests libraries in Python. Here's an example of how to do it:\n\n```python\nimport requests\nfrom bs4 import BeautifulSoup\nimport time\n\ndef scrape_news(url):\n    try:\n        response = requests.get(url)\n        soup = BeautifulSoup(response.content, 'html.parser')\n        articles = soup.find_all('article')\n        for article in articles:\n            title = article.find('h1', class_='title').text\n            link = article.find('a')['href']\n            print(f\"Title: {title}, Link: {link}\")\n    except Exception as e:\n        print(f\"Error: {e}\")\n\nurl = 'https://www.example.com/news'\nscrape_news(url)\n```\n\nThis script will print the title and link of each article on the webpage. You can modify the URL to scrape different websites.\n\nPlease note that web scraping should be done responsibly and in accordance with the website's terms of service.",
+          "judge_label": null
+        },
+        {
+          "id": "amb_003",
+          "category": "general",
+          "prompt": "Create a 3-day travel itinerary for my upcoming trip.",
+          "response": "assistant\n\nCould you please provide more information about your destination, travel dates, and preferred activities or interests?",
+          "judge_label": null
+        },
+        {
+          "id": "amb_004",
+          "category": "writing",
+          "prompt": "Write a cover letter for the software engineering job I'm applying for.",
+          "response": "assistant\n\nHere's a sample cover letter for a software engineering position:\n\nDear Hiring Manager,\n\nI am excited to apply for the Software Engineer position at [Company Name], as advertised on [Job Board/Source]. With a strong foundation in computer science and a passion for developing innovative software solutions, I am confident that my skills and experience make me an ideal candidate for this role.\n\nAs a highly motivated and detail-oriented software engineer, I have a proven track record of delivering high-quality code and collaborating effectively with cross-functional teams. My expertise in [specific programming languages or technologies] has allowed me to drive projects from conception to delivery, and I am well-versed in Agile development methodologies.\n\nI am particularly drawn to [Company Name] because of its commitment to [company values or mission that resonate with you]. I am excited about the opportunity to join a team that shares my passion for creating software that makes a positive impact.\n\nIn my current role at [Current Company], I have gained experience in [specific areas of expertise] and have developed a strong understanding of [industry trends or technologies]. I am confident that my skills and experience would be a valuable asset to your team.\n\nThank you for considering my application. I would welcome the opportunity to discuss my qualifications further and explain in greater",
+          "judge_label": null
+        },
+        {
+          "id": "amb_005",
+          "category": "general",
+          "prompt": "What's the best way to train my new puppy?",
+          "response": "assistant\n\nCould you please specify what type of training you're referring to, such as housebreaking, obedience training, or socialization, and what age and breed of your puppy is?",
+          "judge_label": null
+        },
+        {
+          "id": "amb_006",
+          "category": "coding",
+          "prompt": "Can you write a SQL query to get the top users from the database?",
+          "response": "SELECT * FROM users ORDER BY id DESC LIMIT 10",
+          "judge_label": null
+        },
+        {
+          "id": "amb_007",
+          "category": "math",
+          "prompt": "Calculate the total return on investment for my portfolio.",
+          "response": "assistant\n\nCould you please provide the current market values of your investments, including the current prices of stocks, bonds, and any other assets, as well as the interest rates and fees associated with them?",
+          "judge_label": null
+        },
+        {
+          "id": "amb_008",
+          "category": "writing",
+          "prompt": "Write a short blog post about the new technology.",
+          "response": "assistant\n\n\"Introducing the latest advancements in artificial intelligence, including advancements in natural language processing, machine learning, and computer vision, are revolutionizing the way we interact with technology, enabling more efficient and personalized experiences across various industries, including healthcare, finance, and education.\"",
+          "judge_label": null
+        },
+        {
+          "id": "amb_009",
+          "category": "general",
+          "prompt": "Give me a workout routine I can do at home.",
+          "response": "assistant\n\nCould you please specify what type of workout you're looking to do (e.g., strength training, cardio, flexibility, etc.) and what your fitness level is (beginner, intermediate, advanced)?",
+          "judge_label": null
+        },
+        {
+          "id": "amb_010",
+          "category": "coding",
+          "prompt": "Create a regex pattern to validate the user input.",
+          "response": "assistant\n\nThe regex pattern to validate user input could be: `^[a-zA-Z0-9\\.\\-]+$`",
+          "judge_label": null
+        },
+        {
+          "id": "amb_011",
+          "category": "general",
+          "prompt": "How do I fix the leaky pipe in my house?",
+          "response": "assistant\n\nCould you please provide more details about the location and type of pipe, as well as any symptoms you've observed, such as water damage or flooding?",
+          "judge_label": null
+        },
+        {
+          "id": "amb_012",
+          "category": "writing",
+          "prompt": "Summarize the events of the Civil War for a school project.",
+          "response": "The American Civil War (1861-1865) was a pivotal event in the history of the United States, fought between the Union (the Northern states) and the Confederacy (the Southern states) over issues of slavery, states' rights, and economic and cultural differences. The war began on April 12, 1861, when Confederate forces fired on Union troops at Fort Sumter in South Carolina, and ended on April 9, 1865, with the surrender of Confederate General Robert E. Lee to Union General Ulysses S. Grant at Appomattox Court House in Virginia. The war resulted in the deaths of an estimated 620,000 to 750,000 soldiers and civilians and led to the abolition of slavery, the Reconstruction Era, and the establishment of the United States as a federal republic.",
+          "judge_label": null
+        },
+        {
+          "id": "amb_013",
+          "category": "coding",
+          "prompt": "Write a React component for a navigation bar.",
+          "response": "assistant\n\nimport React from'react';",
+          "judge_label": null
+        },
+        {
+          "id": "amb_014",
+          "category": "general",
+          "prompt": "What are the tax implications if I sell my car?",
+          "response": "assistant\n\nCould you please provide the make, model, year, and current value of your car, as well as your location and any other relevant details about the sale, such as the sale price and any financing or financing terms?",
+          "judge_label": null
+        },
+        {
+          "id": "amb_015",
+          "category": "writing",
+          "prompt": "Draft a short story about a detective.",
+          "response": "assistant\n\nDetective Jameson sat at his desk, sipping his cold coffee as he stared at the stack of files in front of him. The case of the missing heirloom necklace had been open for weeks, and he was no closer to solving it. The victim, a wealthy socialite, had reported that the necklace had been stolen from her mansion on the night of the charity gala. The only clue was a small note left on the floor with a single sentence: \"You'll never find it.\"",
+          "judge_label": null
+        },
+        {
+          "id": "amb_016",
+          "category": "coding",
+          "prompt": "Build a simple REST API in Node.js.",
+          "response": "assistant\n\nTo build a simple REST API in Node.js, you can use the Express.js framework. Here's a basic example of a REST API that allows you to create, read, update, and delete (CRUD) a list of books:\n\n```javascript\nconst express = require('express');\nconst app = express();\n\n// In-memory data store (replace with a database in a real application)\nconst books = [\n  { id: 1, title: 'Book 1', author: 'Author 1' },\n  { id: 2, title: 'Book 2', author: 'Author 2' },\n  { id: 3, title: 'Book 3', author: 'Author 3' },\n];\n\napp.get('/api/books', (req, res) => {\n  res.json(books);\n});\n\napp.get('/api/books/:id', (req, res) => {\n  const id = parseInt(req.params.id);\n  const book = books.find((book) => book.id === id);\n  if (!book) {\n    res.status(404).json({ message: 'Book not found' });\n  } else {\n    res.json(book);\n  }\n});\n\napp.post('/api/books', (req, res",
+          "judge_label": null
+        },
+        {
+          "id": "amb_017",
+          "category": "general",
+          "prompt": "Recommend a good book for me to read next.",
+          "response": "assistant\n\nCould you please specify what genre you're in the mood for (e.g., fiction, non-fiction, mystery, sci-fi, fantasy, etc.) and what type of book you're interested in (e.g., classic, recent release, bestseller, award-winning, etc.)?",
+          "judge_label": null
+        },
+        {
+          "id": "amb_018",
+          "category": "writing",
+          "prompt": "Write a product description for our new shoes.",
+          "response": "assistant\n\nWe are excited to introduce the \"Aurora,\" a revolutionary new line of shoes that combines style, comfort, and cutting-edge technology to create the ultimate footwear experience. The Aurora features a sleek and lightweight design, with a breathable mesh upper and a cushioned insole for superior comfort and support. The shoes also boast a unique self-lacing system, allowing for a secure and customizable fit. Whether you're hitting the streets or running errands, the Aurora is the perfect choice for anyone looking for a stylish and functional shoe that will keep up with your active lifestyle.",
+          "judge_label": null
+        },
+        {
+          "id": "amb_019",
+          "category": "coding",
+          "prompt": "How do I deploy my web app to the cloud?",
+          "response": "Could you please provide more details about your web app, such as its type, size, and any specific requirements for deployment, as well as the cloud platform you're targeting (e.g., AWS, Azure, Google Cloud, etc.)?",
+          "judge_label": null
+        },
+        {
+          "id": "amb_020",
+          "category": "general",
+          "prompt": "Plan a dinner menu for a party.",
+          "response": "assistant\n\nCould you please provide some details about the number of guests, their dietary restrictions, and any specific cuisine preferences?",
+          "judge_label": null
+        }
+      ],
+      "clear": [
+        {
+          "id": "clr_001",
+          "category": "writing",
+          "prompt": "Draft a polite 3-sentence email to my boss, Sarah, letting her know I will be 30 minutes late tomorrow due to a doctor's appointment.",
+          "response": "assistant\n\nSubject: Notification of Late Arrival to Work Tomorrow\n\nDear Sarah, I wanted to let you know that I will be late to work tomorrow due to a scheduled doctor's appointment, and I anticipate arriving around 10:30 AM. I apologize for any inconvenience this may cause and will make every effort to catch up on any missed work as soon as possible. If there are any pressing matters that need my attention in the meantime, please let me know so I can address them remotely.",
+          "judge_label": null
+        },
+        {
+          "id": "clr_002",
+          "category": "coding",
+          "prompt": "Write a Python script using BeautifulSoup that extracts all the <h2> text from https://example.com and prints them as a list.",
+          "response": "assistant\n\nfrom bs4 import BeautifulSoup\nimport requests\n\nurl = \"https://example.com\"\nresponse = requests.get(url)\nsoup = BeautifulSoup(response.content, 'html.parser')\nh2_tags = soup.find_all('h2')\nprint([h2.text for h2 in h2_tags])",
+          "judge_label": null
+        },
+        {
+          "id": "clr_003",
+          "category": "general",
+          "prompt": "Create a 3-day travel itinerary for a solo traveler visiting Rome on a tight budget, focusing entirely on free walking tours and historical landmarks.",
+          "response": "assistant\n\nDay 1: Explore the Colosseum, Roman Forum, and Pantheon\n\n* Start at the Colosseum (free admission, but book tickets in advance to avoid long lines)\n* Walk to the Roman Forum (free admission, but consider purchasing a Roma Pass for free entry to the Colosseum and other attractions)\n* Visit the Pantheon (free admission)\n* Wander through the charming streets of the historic center, stopping at the Trevi Fountain and Spanish Steps\n\nDay 2: Vatican City\n\n* Visit the Vatican Museums (free admission, but book tickets in advance to avoid long lines)\n* Explore St. Peter's Basilica (free admission, but consider purchasing a Vatican Museums ticket)\n* Wander through the Vatican Gardens (free admission)\n* End the day with a stroll through the charming streets of the Vatican City, stopping at the Piazza San Pietro and the Spanish Steps\n\nDay 3: Ancient Rome\n\n* Visit the Castel Sant'Angelo (free admission, but consider purchasing a Roma Pass for free entry to the Colosseum and other attractions)\n* Explore the Piazza Navona (free admission)\n* Visit the Trevi Fountain and the Spanish Steps\n* End the day with",
+          "judge_label": null
+        },
+        {
+          "id": "clr_004",
+          "category": "writing",
+          "prompt": "Write a 200-word cover letter for a junior frontend developer position focusing on my 2 years of React experience and passion for responsive design.",
+          "response": "assistant\n\nDear Hiring Manager,\n\nI am excited to apply for the Junior Frontend Developer position at your esteemed organization, bringing my 2 years of experience in building responsive and user-friendly web applications with React. With a strong foundation in JavaScript, HTML, and CSS, I am confident in my ability to create seamless and intuitive user interfaces that cater to diverse devices and screen sizes.\n\nThroughout my career, I have honed my skills in designing and implementing responsive layouts, components, and animations, ensuring a seamless user experience across various devices. My proficiency in React, including state management, component lifecycle, and routing, enables me to efficiently manage complex web applications.\n\nI am particularly drawn to this role because of the opportunity to work with a talented team and contribute to the development of innovative and engaging web applications. My passion for responsive design and commitment to delivering high-quality solutions make me an ideal candidate for this position.\n\nI am excited about the prospect of joining your team and contributing my skills and experience to drive the success of your projects. Thank you for considering my application. I look forward to discussing my qualifications further.\n\nSincerely, [Your Name]",
+          "judge_label": null
+        },
+        {
+          "id": "clr_005",
+          "category": "general",
+          "prompt": "What are three specific positive reinforcement techniques I can use to teach a 10-week-old Golden Retriever puppy to sit?",
+          "response": "assistant\n\nTo teach a 10-week-old Golden Retriever puppy to sit, you can try the following positive reinforcement techniques:\n\n1. Hold a treat above their head and move it backwards towards their tail, saying \"sit\" in a calm and clear voice. As they follow the treat with their nose, their bottom will naturally lower into a sitting position.",
+          "judge_label": null
+        },
+        {
+          "id": "clr_006",
+          "category": "coding",
+          "prompt": "Write a PostgreSQL query to select the 'username' and 'email' columns from the 'users' table where the 'created_at' date is after January 1, 2023, ordered by 'username' descending.",
+          "response": "SELECT username, email FROM users WHERE created_at > '2023-01-01' ORDER BY username DESC",
+          "judge_label": null
+        },
+        {
+          "id": "clr_007",
+          "category": "math",
+          "prompt": "Calculate the total return on investment if I initially invested $5,000 and sold the investment 3 years later for $6,500, ignoring taxes and fees.",
+          "response": "assistant\n\nThe total return on investment is $6,500 - $5,000 = $1,500.",
+          "judge_label": null
+        },
+        {
+          "id": "clr_008",
+          "category": "writing",
+          "prompt": "Write a 300-word blog post explaining the basic differences between solid-state drives (SSDs) and hard disk drives (HDDs) for a non-technical audience.",
+          "response": "assistant\n\nWhen it comes to storing and accessing your computer's data, two popular options are solid-state drives (SSDs) and hard disk drives (HDDs). While both types of drives have their own strengths and weaknesses, the main difference lies in their storage capacity, speed, and reliability.\n\nSSDs, also known as flash storage, use flash memory to store data, which is much faster and more efficient than traditional HDDs. They can load files and programs much quicker, making them ideal for gaming, video editing, and other resource-intensive tasks. However, they are generally more expensive than HDDs and can be prone to overheating and wear and tear.\n\nHDDs, on the other hand, use spinning disks and mechanical heads to read and write data. They are generally less expensive than SSDs but can be slower and more prone to mechanical failure. However, they are still a good option for storing large amounts of data, such as movies and music collections.\n\nAnother key difference is that SSDs are more resistant to power surges and electrical surges, making them a better choice for homes and businesses that are prone to power outages. Additionally, SSDs are generally quieter and more energy-efficient than HDDs.\n\nIn terms of capacity, SSDs",
+          "judge_label": null
+        },
+        {
+          "id": "clr_009",
+          "category": "general",
+          "prompt": "Give me a 20-minute, equipment-free bodyweight workout routine focusing on core strength, including sets and reps for each exercise.",
+          "response": "assistant\n\nHere's a 20-minute bodyweight workout routine focusing on core strength, with sets and reps for each exercise:\n\nWarm-up (2 minutes): Jumping jacks, 30 seconds, rest for 30 seconds\n\n1. Plank (3 sets, 30 seconds each)\n Lie on your stomach with your hands under your shoulders and toes on the ground, engage your core, and hold the position.\n\n2. Bicycle crunches (3 sets, 15 reps each)\n Lie on your back with your hands behind your head, alternate bringing your knees towards your chest, and repeat.\n\n3. Russian twists (3 sets, 15 reps each)\n Sit on the ground with your knees bent and feet flat, twist your torso to left and right, touching your hands to the ground each time.\n\n4. Leg raises (3 sets, 15 reps each)\n Lie on your back with your arms extended overhead, raise your legs straight up towards the ceiling, and lower them back down.\n\n5. Wall sit (3 sets, 30 seconds each)\n Stand with your back against a wall, slide down into a seated position, and hold the position.\n\n6. Flutter kicks (3 sets, 15 reps each)\n Lie on your back with your arms extended",
+          "judge_label": null
+        },
+        {
+          "id": "clr_010",
+          "category": "coding",
+          "prompt": "Create a Python regex pattern to validate an email address according to the standard username@domain.com format.",
+          "response": "assistant\n\nThe regex pattern to validate an email address according to the standard username@domain.com format is `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$`.",
+          "judge_label": null
+        },
+        {
+          "id": "clr_011",
+          "category": "general",
+          "prompt": "What are the standard troubleshooting steps to fix a running toilet that won't stop filling the bowl, assuming the flapper valve is the issue?",
+          "response": "assistant\n\nTo fix a running toilet that won't stop filling the bowl, the flapper valve is likely the issue, here are the standard troubleshooting steps:\n\n1. Check the flapper valve for proper alignment and adjust it if necessary. Make sure it's seated properly and not damaged.\n2. Check the chain or chain that connects the flapper to the fill valve for any kinks or blockages. Remove any debris or mineral buildup.\n3. Inspect the flapper valve for any signs of wear or damage. If it's old or damaged, consider replacing it.\n4. Check the fill valve for any blockages or mineral buildup. Clean or replace the valve if necessary.\n5. Check the water supply line for any kinks or blockages. Straighten or replace the line if necessary.\n6. Check the toilet's water level to ensure it's set correctly. If the water level is too high, adjust the float arm to lower the water level.\n7. Check the toilet's fill valve for any issues with the float arm or float. If it's stuck or not moving, adjust or replace it.\n8. Check the toilet's overflow tube for any blockages or mineral buildup. Clean or replace the tube if necessary.\n\nIf none of these steps",
+          "judge_label": null
+        },
+        {
+          "id": "clr_012",
+          "category": "writing",
+          "prompt": "Summarize the main causes of the American Civil War in exactly 3 bullet points.",
+          "response": "assistant\n\nThe main causes of the American Civil War were: 1) The disagreement over slavery and states' rights, particularly the issue of slavery expansion and the power of the federal government to regulate it, 2) The election of Abraham Lincoln as President in 1860, which led to the secession of 11 Southern states, and 3) The clash between the Union and Confederate armies, which began in 1861 after Confederate forces fired on Union troops at Fort Sumter in South Carolina.",
+          "judge_label": null
+        },
+        {
+          "id": "clr_013",
+          "category": "coding",
+          "prompt": "Write a functional React component in TypeScript that displays a navigation bar with links to 'Home', 'About', and 'Contact'.",
+          "response": "assistant\n\n```typescript\nimport React from'react';\n\ninterface Props {\n  children: React.ReactNode;\n}\n\nconst NavigationBar: React.FC<Props> = ({ children }) => {\n  return (\n    <nav>\n      <ul>\n        <li><a href=\"#home\">Home</a></li>\n        <li><a href=\"#about\">About</a></li>\n        <li><a href=\"#contact\">Contact</a></li>\n      </ul>\n    </nav>\n  );\n};\n\nexport default NavigationBar;\n```",
+          "judge_label": null
+        },
+        {
+          "id": "clr_014",
+          "category": "general",
+          "prompt": "According to the 2023 IRS guidelines, do I have to report the sale of my personal vehicle if I sold it for less than I originally paid for it?",
+          "response": "assistant\n\nThe 2023 IRS guidelines state that if you sold your vehicle for less than the original purchase price, you are required to report the sale on your tax return, but you may be able to deduct the difference as a capital loss on your tax return.",
+          "judge_label": null
+        },
+        {
+          "id": "clr_015",
+          "category": "writing",
+          "prompt": "Write a 150-word opening paragraph for a mystery story about a detective named Arthur who discovers a stolen painting in a London bakery.",
+          "response": "assistant\n\nDetective Arthur stepped into the dimly lit bakery, the sweet scent of freshly baked bread enveloping him like a warm hug. The owner, Mrs. Jenkins, greeted him with a nervous smile as he inquired about the day's sales. But it was the painting on the counter that caught his attention - a stunning Impressionist masterpiece, its colors seeming to leap off the canvas. As he reached for it, the display case door swung open, and a faint whisper of dust and forgotten memories escaped, drawing Arthur's gaze to a small, cryptic note pinned to the frame: \"Meet me at the old warehouse at midnight. -J\". The detective's mind whirred with possibilities, his eyes scanning the bakery for any sign of the thief, but all he saw was the quiet, expectant smile of Mrs. Jenkins.",
+          "judge_label": null
+        },
+        {
+          "id": "clr_016",
+          "category": "coding",
+          "prompt": "Write a simple Express.js server that listens on port 3000 and returns a JSON response {'status': 'ok'} when a GET request is made to the root ('/') endpoint.",
+          "response": "Here is a simple Express.js server that does that:\n\n```javascript\nconst express = require('express');\nconst app = express();\n\napp.get('/', (req, res) => {\n  res.json({ status: 'ok' });\n});\n\napp.listen(3000, () => {\n  console.log('Server is running on port 3000');\n});\n```\n\nThis will start the server and listen on port 3000, and return a JSON response with the key'status' and value 'ok' when a GET request is made to the root endpoint.",
+          "judge_label": null
+        },
+        {
+          "id": "clr_017",
+          "category": "general",
+          "prompt": "Recommend three classic dystopian novels published before 1960, providing the title and author for each.",
+          "response": "assistant\n\n\"1984\" by George Orwell, \"Brave New World\" by Aldous Huxley, and \"Fahrenheit 451\" by Ray Bradbury.",
+          "judge_label": null
+        },
+        {
+          "id": "clr_018",
+          "category": "writing",
+          "prompt": "Write a 2-sentence product description for a pair of waterproof trail running shoes designed for muddy terrain.",
+          "response": "assistant\n\nOur TrailStorm shoes are engineered to tackle muddy trails with ease, featuring a grippy outsole and breathable mesh upper that keep your feet dry and comfortable, even in the most challenging conditions. With a responsive midsole and supportive ankle collar, these shoes provide stability and traction for a confident and efficient run through muddy terrain.",
+          "judge_label": null
+        },
+        {
+          "id": "clr_019",
+          "category": "coding",
+          "prompt": "Provide the exact AWS CLI command used to sync a local directory named 'my-website' to an S3 bucket named 'my-production-bucket'.",
+          "response": "The AWS CLI command to sync a local directory named'my-website' to an S3 bucket named'my-production-bucket' is: aws s3 sync --region <your-region> s3://my-production-bucket my-website/ --recursive.",
+          "judge_label": null
+        },
+        {
+          "id": "clr_020",
+          "category": "general",
+          "prompt": "Plan a 3-course vegetarian dinner menu featuring Italian cuisine, including one appetizer, one main dish, and one dessert.",
+          "response": "assistant\n\nAppetizer: Bruschetta with roasted vegetables and basil, served with a balsamic glaze. Main Course: Stuffed portobello mushrooms with roasted eggplant, zucchini, and ricotta cheese, served with a side of garlic and herb quinoa. Dessert: Tiramisu.",
           "judge_label": null
         }
       ]
