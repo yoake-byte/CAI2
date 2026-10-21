@@ -21,103 +21,103 @@
   "eval_sets": {
     "ambiguous": {
       "path": "eval/held_out_ambiguous.jsonl",
-      "n": 10
+      "n": 20
     },
     "clear": {
       "path": "eval/held_out_clear.jsonl",
-      "n": 10
+      "n": 20
     },
     "mmlu": {
       "path": "eval/mmlu_slice.jsonl",
-      "n": 5
+      "n": 20
     }
   },
   "runs": {
     "base": {
-      "ask_rate": 0.9,
-      "answer_rate": 0.6,
-      "mmlu_acc": 0.2,
+      "ask_rate": 0.15,
+      "answer_rate": 0.9,
+      "mmlu_acc": 0.1,
       "label_counts": {
         "ambiguous": {
-          "ask": 9,
-          "answer": 1,
-          "other": 0
+          "ask": 3,
+          "answer": 16,
+          "other": 1
         },
         "clear": {
-          "ask": 0,
-          "answer": 6,
-          "other": 4
+          "ask": 2,
+          "answer": 18,
+          "other": 0
         }
       }
     },
     "sft": {
-      "ask_rate": 0.9,
-      "answer_rate": 0.5,
-      "mmlu_acc": 0.4,
+      "ask_rate": 0.7,
+      "answer_rate": 0.9,
+      "mmlu_acc": 0.2,
       "label_counts": {
         "ambiguous": {
-          "ask": 9,
-          "answer": 0,
-          "other": 1
+          "ask": 14,
+          "answer": 3,
+          "other": 3
         },
         "clear": {
-          "ask": 0,
-          "answer": 5,
-          "other": 5
+          "ask": 1,
+          "answer": 18,
+          "other": 1
         }
       }
     },
     "dpo": [
       {
-        "ask_rate": 0.9,
-        "answer_rate": 0.5,
-        "mmlu_acc": 0.4,
+        "ask_rate": 0.7,
+        "answer_rate": 0.85,
+        "mmlu_acc": 0.25,
         "label_counts": {
           "ambiguous": {
-            "ask": 9,
-            "answer": 0,
-            "other": 1
+            "ask": 14,
+            "answer": 4,
+            "other": 2
           },
           "clear": {
-            "ask": 0,
-            "answer": 5,
-            "other": 5
+            "ask": 3,
+            "answer": 17,
+            "other": 0
           }
         },
         "beta": 0.1
       },
       {
-        "ask_rate": 0.9,
-        "answer_rate": 0.5,
-        "mmlu_acc": 0.4,
+        "ask_rate": 0.55,
+        "answer_rate": 0.85,
+        "mmlu_acc": 0.25,
         "label_counts": {
           "ambiguous": {
-            "ask": 9,
-            "answer": 0,
-            "other": 1
+            "ask": 11,
+            "answer": 6,
+            "other": 3
           },
           "clear": {
-            "ask": 0,
-            "answer": 5,
-            "other": 5
+            "ask": 1,
+            "answer": 17,
+            "other": 2
           }
         },
         "beta": 0.2
       },
       {
-        "ask_rate": 0.9,
-        "answer_rate": 0.5,
-        "mmlu_acc": 0.4,
+        "ask_rate": 0.55,
+        "answer_rate": 0.95,
+        "mmlu_acc": 0.3,
         "label_counts": {
           "ambiguous": {
-            "ask": 9,
-            "answer": 0,
-            "other": 1
+            "ask": 11,
+            "answer": 5,
+            "other": 4
           },
           "clear": {
             "ask": 0,
-            "answer": 5,
-            "other": 5
+            "answer": 19,
+            "other": 1
           }
         },
         "beta": 0.3
