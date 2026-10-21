@@ -1,10 +1,20 @@
-{"id": "amb_001", "class": "ambiguous", "category": "coding", "prompt": "Can you fix the bug in my function?"}
-{"id": "amb_002", "class": "ambiguous", "category": "coding", "prompt": "Write a script to parse the logs."}
-{"id": "amb_003", "class": "ambiguous", "category": "general", "prompt": "Summarize the article for me."}
-{"id": "amb_004", "class": "ambiguous", "category": "translation", "prompt": "Translate this into French."}
-{"id": "amb_005", "class": "ambiguous", "category": "writing", "prompt": "Give me some feedback on my essay."}
-{"id": "amb_006", "class": "ambiguous", "category": "coding", "prompt": "How do I optimize this query?"}
-{"id": "amb_007", "class": "ambiguous", "category": "general", "prompt": "Plan an itinerary for my upcoming trip."}
-{"id": "amb_008", "class": "ambiguous", "category": "coding", "prompt": "Why is my model not converging?"}
-{"id": "amb_009", "class": "ambiguous", "category": "math", "prompt": "Solve the equation."}
-{"id": "amb_010", "class": "ambiguous", "category": "general", "prompt": "What is the best way to cook dinner tonight?"}
+{"id": "amb_001", "class": "ambiguous", "category": "writing", "prompt": "Draft an email to my boss letting them know I'll be late tomorrow."}
+{"id": "amb_002", "class": "ambiguous", "category": "coding", "prompt": "Write a Python script to scrape articles from the news website."}
+{"id": "amb_003", "class": "ambiguous", "category": "general", "prompt": "Create a 3-day travel itinerary for my upcoming trip."}
+{"id": "amb_004", "class": "ambiguous", "category": "writing", "prompt": "Write a cover letter for the software engineering job I'm applying for."}
+{"id": "amb_005", "class": "ambiguous", "category": "general", "prompt": "What's the best way to train my new puppy?"}
+{"id": "amb_006", "class": "ambiguous", "category": "coding", "prompt": "Can you write a SQL query to get the top users from the database?"}
+{"id": "amb_007", "class": "ambiguous", "category": "math", "prompt": "Calculate the total return on investment for my portfolio."}
+{"id": "amb_008", "class": "ambiguous", "category": "writing", "prompt": "Write a short blog post about the new technology."}
+{"id": "amb_009", "class": "ambiguous", "category": "general", "prompt": "Give me a workout routine I can do at home."}
+{"id": "amb_010", "class": "ambiguous", "category": "coding", "prompt": "Create a regex pattern to validate the user input."}
+{"id": "amb_011", "class": "ambiguous", "category": "general", "prompt": "How do I fix the leaky pipe in my house?"}
+{"id": "amb_012", "class": "ambiguous", "category": "writing", "prompt": "Summarize the events of the Civil War for a school project."}
+{"id": "amb_013", "class": "ambiguous", "category": "coding", "prompt": "Write a React component for a navigation bar."}
+{"id": "amb_014", "class": "ambiguous", "category": "general", "prompt": "What are the tax implications if I sell my car?"}
+{"id": "amb_015", "class": "ambiguous", "category": "writing", "prompt": "Draft a short story about a detective."}
+{"id": "amb_016", "class": "ambiguous", "category": "coding", "prompt": "Build a simple REST API in Node.js."}
+{"id": "amb_017", "class": "ambiguous", "category": "general", "prompt": "Recommend a good book for me to read next."}
+{"id": "amb_018", "class": "ambiguous", "category": "writing", "prompt": "Write a product description for our new shoes."}
+{"id": "amb_019", "class": "ambiguous", "category": "coding", "prompt": "How do I deploy my web app to the cloud?"}
+{"id": "amb_020", "class": "ambiguous", "category": "general", "prompt": "Plan a dinner menu for a party."}
