@@ -1,5 +1,20 @@
-{"id": "m_001", "subject": "computer_science", "question": "What does CPU stand for?", "choices": ["Central Processing Unit", "Computer Personal Unit", "Central Process Utility", "Central Processor Universal"], "answer": 0}
-{"id": "m_002", "subject": "machine_learning", "question": "Which of the following is an activation function commonly used in deep networks?", "choices": ["SVM", "ReLU", "K-Means", "PCA"], "answer": 1}
-{"id": "m_003", "subject": "mathematics", "question": "What is the derivative of x^2 with respect to x?", "choices": ["x", "2", "2x", "x^3"], "answer": 2}
-{"id": "m_004", "subject": "networking", "question": "Which protocol operates at the Transport layer of the OSI model?", "choices": ["IP", "HTTP", "Ethernet", "TCP"], "answer": 3}
-{"id": "m_005", "subject": "general_science", "question": "Which planet is known as the Red Planet?", "choices": ["Venus", "Mars", "Jupiter", "Saturn"], "answer": 1}
+{"id": "m_001", "subject": "mathematics", "question": "What is the value of Pi rounded to two decimal places?", "choices": ["3.14", "3.15", "3.16", "3.13"], "answer": 0}
+{"id": "m_002", "subject": "biology", "question": "Which organelle is known as the powerhouse of the cell?", "choices": ["Nucleus", "Mitochondria", "Ribosome", "Endoplasmic Reticulum"], "answer": 1}
+{"id": "m_003", "subject": "history", "question": "Who was the first President of the United States?", "choices": ["Thomas Jefferson", "John Adams", "Abraham Lincoln", "George Washington"], "answer": 3}
+{"id": "m_004", "subject": "physics", "question": "What is the approximate speed of light in a vacuum?", "choices": ["300,000 m/s", "3,000 km/s", "300,000 km/s", "3,000,000 km/s"], "answer": 2}
+{"id": "m_005", "subject": "computer_science", "question": "What does HTML stand for?", "choices": ["HyperText Markup Language", "HighText Machine Language", "HyperLoop Machine Language", "HyperText Multiple Language"], "answer": 0}
+{"id": "m_006", "subject": "geography", "question": "Which is the largest ocean on Earth?", "choices": ["Atlantic Ocean", "Pacific Ocean", "Indian Ocean", "Arctic Ocean"], "answer": 1}
+{"id": "m_007", "subject": "chemistry", "question": "What is the chemical symbol for Gold?", "choices": ["Gd", "Go", "Au", "Ag"], "answer": 2}
+{"id": "m_008", "subject": "machine_learning", "question": "Which of the following is an algorithm commonly used for classification tasks?", "choices": ["K-Means", "PCA", "Linear Regression", "Random Forest"], "answer": 3}
+{"id": "m_009", "subject": "literature", "question": "Who wrote the dystopian novel '1984'?", "choices": ["George Orwell", "Aldous Huxley", "Ray Bradbury", "F. Scott Fitzgerald"], "answer": 0}
+{"id": "m_010", "subject": "astronomy", "question": "What is the largest planet in our solar system?", "choices": ["Saturn", "Jupiter", "Neptune", "Earth"], "answer": 1}
+{"id": "m_011", "subject": "economics", "question": "What does GDP stand for?", "choices": ["Gross Domestic Policy", "General Domestic Product", "Gross Domestic Product", "Gross Development Product"], "answer": 2}
+{"id": "m_012", "subject": "computer_science", "question": "Which data structure follows the Last-In-First-Out (LIFO) principle?", "choices": ["Stack", "Queue", "Tree", "Graph"], "answer": 0}
+{"id": "m_013", "subject": "mathematics", "question": "What is the square root of 256?", "choices": ["14", "16", "18", "24"], "answer": 1}
+{"id": "m_014", "subject": "anatomy", "question": "What is the largest organ in the human body?", "choices": ["Heart", "Liver", "Brain", "Skin"], "answer": 3}
+{"id": "m_015", "subject": "physics", "question": "Who developed the theory of general relativity?", "choices": ["Isaac Newton", "Niels Bohr", "Albert Einstein", "Galileo Galilei"], "answer": 2}
+{"id": "m_016", "subject": "chemistry", "question": "What is the pH of pure water at room temperature?", "choices": ["0", "7", "14", "10"], "answer": 1}
+{"id": "m_017", "subject": "geography", "question": "What is the capital city of Japan?", "choices": ["Tokyo", "Kyoto", "Osaka", "Seoul"], "answer": 0}
+{"id": "m_018", "subject": "machine_learning", "question": "In the context of neural networks, what does CNN stand for?", "choices": ["Computer Neural Network", "Central Neural Network", "Convolutional Neural Network", "Calculated Neural Network"], "answer": 2}
+{"id": "m_019", "subject": "history", "question": "In what year did World War II end?", "choices": ["1918", "1939", "1941", "1945"], "answer": 3}
+{"id": "m_020", "subject": "music", "question": "How many keys are on a standard modern piano?", "choices": ["76", "88", "61", "104"], "answer": 1}
