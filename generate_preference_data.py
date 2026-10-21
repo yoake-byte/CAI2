@@ -87,20 +87,39 @@ def synthesize_pairs(n: int) -> list[dict]:
         return tokenizer.decode(gen, skip_special_tokens=True)
 
     # Robust parsing helper to ignore Markdown bolding and colons
-    def parse_tags_robustly(text: str) -> dict | None:
-        cleaned = text.replace("**", "").replace(":", "")
-        
-        prompt_match = re.search(r'[PROMPT]\s*(.*?)\s*[CHOSEN]', cleaned, re.DOTALL | re.IGNORECASE)
-        chosen_match = re.search(r'[CHOSEN]\s*(.*?)\s*[REJECTED]', cleaned, re.DOTALL | re.IGNORECASE)
-        rejected_match = re.search(r'[REJECTED]\s*(.*)', cleaned, re.DOTALL | re.IGNORECASE)
-        
-        if prompt_match and chosen_match and rejected_match:
-            return {
-                "prompt": prompt_match.group(1).strip(),
-                "chosen": chosen_match.group(1).strip(),
-                "rejected": rejected_match.group(1).strip()
-            }
-        return None
+def parse_tags_robustly(text: str) -> dict | None:
+  # 1. Normalize markdown headers/bolding without stripping individual letters
+  cleaned = text.replace("**", "").replace("###", "").strip()
+
+  # 2. Check that all exact tag anchors exist
+  if (
+      "[PROMPT]" not in cleaned
+      or "[CHOSEN]" not in cleaned
+      or "[REJECTED]" not in cleaned
+  ):
+    return None
+
+  try:
+    # 3. Clean slice using exact substrings
+    after_prompt = cleaned.split("[PROMPT]", 1)[1]
+    prompt_text, after_chosen = after_prompt.split("[CHOSEN]", 1)
+    chosen_text, rejected_text = after_chosen.split("[REJECTED]", 1)
+
+    # 4. Strip extraneous colons or trailing delimiters
+    prompt = prompt_text.lstrip(":").strip()
+    chosen = chosen_text.lstrip(":").strip()
+    rejected = rejected_text.lstrip(":").strip()
+
+    # Reject if any field ended up empty or just tag remnants
+    if not prompt or not chosen or not rejected:
+      return None
+
+    # Cut off if the model started hallucinating a second scenario
+    rejected = rejected.split("[PROMPT]")[0].strip()
+
+    return {"prompt": prompt, "chosen": chosen, "rejected": rejected}
+  except Exception:
+    return None
 
     base_system = """You are a strict data formatting AI.
 You must output ONLY the requested tags: [PROMPT], [CHOSEN], [REJECTED].
